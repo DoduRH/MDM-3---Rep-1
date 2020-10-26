@@ -1,6 +1,8 @@
 # importing libraries
 import pygame as pg
 import vehicle
+import obstacle
+import road
 import random
 import time
 import numpy as np
@@ -17,8 +19,9 @@ clock = pg.time.Clock()
 # Main loop flag
 simQuit = False
 
-car = vehicle.Vehicle([0, gv.displaySize[1]/2], (40, 20), [5, 0])
-
+car = vehicle.Vehicle([0, (gv.displaySize[1]/2)-10], (40, 20), [5, 0])
+obstruction = obstacle.Obstacle([gv.displaySize[0]/2, (gv.displaySize[1]/2) - 20], (30, 40))
+road = road.Road([0, (gv.displaySize[1]/2)-gv.roadWidth/2], 30, 1, gv.roadWidth)
 
 # Main loop
 while not simQuit:
@@ -31,7 +34,10 @@ while not simQuit:
 
     car.move()
     simDisplay.fill(gv.white)
+    road.draw(simDisplay)
     car.draw(simDisplay)
+    obstruction.draw(simDisplay)
+
     pg.display.update()
 
     clock.tick(gv.fps)

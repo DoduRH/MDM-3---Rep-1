@@ -6,10 +6,11 @@ import globalVariables as gv
 class Vehicle:
 
     # startPos = [x, y] (array), size = (width, length) (tuple), velocity = [xVel, yVel] (array)
-    def __init__(self, startPos, size, velocity):
-        self.pos = startPos
+    def __init__(self, pos, size, velocity):
+        self.pos = pos
         self.size = size
         self.velocity = velocity
+        self.crashed = False
 
     # draws rectangle at location of vehicle
     def draw(self, display):
@@ -22,3 +23,7 @@ class Vehicle:
 
         if (self.pos[1] + self.velocity[1])-gv.displaySize[1] <= 30:
             self.pos[1] += self.velocity[1]
+
+    # If the vehicle hits something then it has crashed and this function is called
+    def crashed(self):
+        self.crashed = True

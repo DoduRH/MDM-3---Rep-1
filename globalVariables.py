@@ -1,7 +1,7 @@
 # A lovely home for all our global variables
 
 # pygame variables
-displaySize = (800, 600)
+displaySize = (1000, 600)
 fps = 60
 
 # colour bank
@@ -10,4 +10,9 @@ green = (0, 255, 0)
 blue = (0, 0, 255)
 white = (255, 255, 255)
 black = (0, 0, 0)
+grey = (211, 211, 211)
+
+# simulation variables
+roadWidth = 40
+
 
