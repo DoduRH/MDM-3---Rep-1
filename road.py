@@ -12,4 +12,5 @@ class Road:
         self.laneWidth = laneWidth
 
     def draw(self, display):
-        pg.draw.rect(display, gV.grey, [self.pos[0], self.pos[1], gV.displaySize[0], self.laneWidth])
+        for i in range(self.laneCount):
+            pg.draw.rect(display, gV.grey, [self.pos[0], self.pos[1] + self.laneWidth * i * 1.05, gV.displaySize[0], self.laneWidth])

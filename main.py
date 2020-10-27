@@ -21,7 +21,7 @@ simQuit = False
 
 car = vehicle.Vehicle([0, (gV.displaySize[1]/2)-10], (40, 20), [0, 0], [3, 0])
 obstruction = obstacle.Obstacle([gV.displaySize[0]/1.5, (gV.displaySize[1]/2)], (30, 40))
-road = road.Road([0, (gV.displaySize[1]/2)-gV.roadWidth/2], 100, 1, gV.roadWidth)
+road = road.Road([0, (gV.displaySize[1]/2)-gV.roadWidth/2], 100, 3, gV.roadWidth)
 
 # Main loop
 while not simQuit:
