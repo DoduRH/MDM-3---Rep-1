@@ -20,8 +20,8 @@ class Vehicle:
         # Draw car itself
         pg.draw.rect(display, gV.black, [self.pos[0], self.pos[1], self.size[0], self.size[1]])
         # Visualise the vehicle's stopping distance
-        pg.draw.rect(display, gV.blue, [self.pos[0]+(self.size[0]), self.pos[1]+(self.size[1]/2-1),
-                                        self.stoppingDistance, 1])
+        pg.draw.rect(display, gV.blue, [self.pos[0]+(self.size[0]), self.pos[1],
+                                        self.stoppingDistance, self.size[1]])
 
     # move vehicle up to max speed then stop
     def move(self, road):
@@ -37,7 +37,9 @@ class Vehicle:
     # checks that the vehicle's next movement is safe
     def checkHazards(self, road, obstacles):
         # if the rect drawn in front of car intersects hazard then hazard is within stopping distance
-        if obstacles.pos[0] + obstacles.size[0] > (self.pos[0]+self.size[0])+self.stoppingDistance > obstacles.pos[0]:
+        if (obstacles.pos[0] + obstacles.size[0] > (self.pos[0]+self.size[0])+self.stoppingDistance > obstacles.pos[0]
+           and obstacles.pos[1] + obstacles.size[1] > (self.pos[1]+self.size[1]) > obstacles.pos[1]):
+
             self.acceleration = [-3, 0]
 
     # If the vehicle hits something then it has crashed and this function is called
