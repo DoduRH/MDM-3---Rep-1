@@ -21,7 +21,7 @@ class Vehicle:
         pg.draw.rect(display, gV.black, [self.pos[0], self.pos[1], self.size[0], self.size[1]])
         # Visualise the vehicle's stopping distance
         pg.draw.rect(display, gV.blue, [self.pos[0]+(self.size[0]), self.pos[1],
-                                       self.stoppingDistance, self.size[1]])
+                                        self.stoppingDistance, self.size[1]])
 
     # move vehicle up to max speed then stop
     def move(self, road):

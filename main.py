@@ -60,6 +60,3 @@ while not simQuit:
 
 pg.quit()
 quit()
-
-
-
