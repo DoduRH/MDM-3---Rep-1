@@ -21,7 +21,7 @@ simQuit = False
 # Create Objects for simulation
 vehicleArray = []
 obstructionArray = [obstacle.Obstacle([gV.displaySize[0]/1.5, (gV.displaySize[1]/2)], (30, 40))]
-roadObject = road.Road([0, (gV.displaySize[1]/2)-gV.roadWidth/2], 100, 1, gV.roadWidth, 0.06166666666666667)
+roadObject = road.Road([0, (gV.displaySize[1]/2)-gV.roadWidth/2], 100, 1, gV.roadWidth, gV.arrivalRate)
 
 
 def generateTraffic(road):
