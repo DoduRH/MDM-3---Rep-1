@@ -35,8 +35,11 @@ class Vehicle:
         self.pos[0] += self.velocity[0] * gV.deltaTime
 
     # checks that the vehicle's next movement is safe
-    def checkHazards(self, road, obstacles):
+    def checkHazards(self, road, obstacles=None):
         # if the rect drawn in front of car intersects hazard then hazard is within stopping distance
+        if obstacles is None:
+            return
+
         if (obstacles.pos[0] + obstacles.size[0] > (self.pos[0]+self.size[0])+self.stoppingDistance > obstacles.pos[0]
            and obstacles.pos[1] + obstacles.size[1] > (self.pos[1]+self.size[1]) > obstacles.pos[1]):
 
