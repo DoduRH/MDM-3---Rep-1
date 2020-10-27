@@ -1,6 +1,6 @@
 # Contains the road class
 import pygame as pg
-import globalVariables as gv
+import globalVariables as gV
 
 
 class Road:
@@ -12,4 +12,4 @@ class Road:
         self.laneWidth = laneWidth
 
     def draw(self, display):
-        pg.draw.rect(display, gv.grey, [self.pos[0], self.pos[1], gv.displaySize[0], self.laneWidth])
+        pg.draw.rect(display, gV.grey, [self.pos[0], self.pos[1], gV.displaySize[0], self.laneWidth])

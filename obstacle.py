@@ -1,6 +1,6 @@
 # Contains the obstacle class
 import pygame as pg
-import globalVariables as gv
+import globalVariables as gV
 
 
 class Obstacle:
@@ -11,4 +11,4 @@ class Obstacle:
 
     # Draws the obstacle to display
     def draw(self, display):
-        pg.draw.rect(display, gv.red, [self.pos[0], self.pos[1], self.size[0], self.size[1]])
+        pg.draw.rect(display, gV.red, [self.pos[0], self.pos[1], self.size[0], self.size[1]])
