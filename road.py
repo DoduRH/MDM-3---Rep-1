@@ -5,11 +5,12 @@ import globalVariables as gV
 
 class Road:
 
-    def __init__(self, pos, speedLimit, laneCount, laneWidth):
+    def __init__(self, pos, speedLimit, laneCount, laneWidth, meanArrivalRate):
         self.pos = pos
         self.speedLimit = speedLimit
         self.laneCount = laneCount
         self.laneWidth = laneWidth
+        self.meanArrivalRate = meanArrivalRate
 
     def draw(self, display):
         for i in range(self.laneCount):

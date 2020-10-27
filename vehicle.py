@@ -35,12 +35,34 @@ class Vehicle:
         self.pos[0] += self.velocity[0] * gV.deltaTime
 
     # checks that the vehicle's next movement is safe
-    def checkHazards(self, road, obstacles):
-        # if the rect drawn in front of car intersects hazard then hazard is within stopping distance
-        if (obstacles.pos[0] + obstacles.size[0] > (self.pos[0]+self.size[0])+self.stoppingDistance > obstacles.pos[0]
-           and obstacles.pos[1] + obstacles.size[1] > (self.pos[1]+self.size[1]) > obstacles.pos[1]):
+    def checkHazards(self, road, vehiclesArray=None, obstaclesArray=None):
+        # if there are no hazards within stopping distance then there is nothing to check as simulation is empty
+        if (obstaclesArray and vehiclesArray) is None:
+            return
 
+        hazardFound = False
+
+        # if an obstacle is within safe stopping distance then stop
+        for obstacle in obstaclesArray:
+            if (obstacle.pos[0] + obstacle.size[0] > (self.pos[0]+self.size[0])+self.stoppingDistance > obstacle.pos[0]
+               and obstacle.pos[1] + obstacle.size[1] > (self.pos[1]+self.size[1]) > obstacle.pos[1]):
+                hazardFound = True
+
+        # if another vehicle is within safe stopping distance then stop
+        for otherVehicle in vehiclesArray:
+            # if the other vehicle is yourself then skip
+            if self == otherVehicle:
+                pass
+
+            elif (otherVehicle.pos[0] + otherVehicle.size[0] >= (self.pos[0]+self.size[0])+self.stoppingDistance > otherVehicle.pos[0]
+                  and otherVehicle.pos[1] + otherVehicle.size[1] >= (self.pos[1]+self.size[1]) > otherVehicle.pos[1]):
+                hazardFound = True
+
+        if hazardFound:
             self.acceleration = [-3, 0]
+
+        else:
+            self.acceleration = [3, 0]
 
     # If the vehicle hits something then it has crashed and this function is called
     def crashed(self):
