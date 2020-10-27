@@ -27,7 +27,7 @@ roadObject.obstructionArray.append(obstacle.Obstacle(road=roadObject, x=gV.displ
 
 def generateTraffic(road):
     for arrivals in range(0, np.random.poisson(road.meanArrivalRate)):
-        roadObject.vehicleArray.append(vehicle.Vehicle(road=roadObject, size=(40, 30), lane=randint(0, gV.laneCount-1), x=-100, velocity=0, acceleration=3))
+        roadObject.vehicleArray.append(vehicle.Vehicle(road=roadObject, size=(40, 30), lane=randint(0, gV.laneCount-1), x=-40, velocity=0, acceleration=3))
 
 
 # Main loop
@@ -42,6 +42,10 @@ while not simQuit:
         # If red cross pressed then quit main loop
         if event.type == pg.QUIT:
             simQuit = True
+
+        if event.type == pg.KEYDOWN:
+            if event.unicode.isnumeric() and int(event.unicode) < gV.laneCount:
+                roadObject.vehicleArray.append(vehicle.Vehicle(road=roadObject, size=(40, 30), lane=int(event.unicode), x=-40, velocity=0, acceleration=3))
 
     # generate traffic coming down road frequency dependent on poisson distribution
     if round(gV.runTimer, 1) % 1 == 0:
