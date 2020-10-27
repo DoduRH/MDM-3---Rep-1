@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 import matplotlib as plt
 import globalVariables as gV
+from random import randint
 
 
 # initialise pygame
@@ -19,14 +20,14 @@ clock = pg.time.Clock()
 simQuit = False
 
 # Create Objects for simulation
-roadObject = road.Road(pos=[0, (gV.displaySize[1]/2)-gV.roadWidth/2], speedLimit=100, laneCount=1, laneWidth=gV.roadWidth, meanArrivalRate=gV.arrivalRate)
+roadObject = road.Road(pos=[0, (gV.displaySize[1]/2)-gV.roadWidth/2], speedLimit=100, laneCount=3, laneWidth=gV.roadWidth, meanArrivalRate=gV.arrivalRate)
 
 # Add obstacle
-roadObject.obstructionArray.append(obstacle.Obstacle(pos=[gV.displaySize[0]/1.5, (gV.displaySize[1]/2)], size=(30, 40)))
+roadObject.obstructionArray.append(obstacle.Obstacle(road=roadObject, x=gV.displaySize[0]/1.5, lane=2, size=(30, 40)))
 
 def generateTraffic(road):
     for arrivals in range(0, np.random.poisson(road.meanArrivalRate)):
-        roadObject.vehicleArray.append(vehicle.Vehicle([-100, (gV.displaySize[1] / 2) - 10], (40, 20), [0, 0], [3, 0]))
+        roadObject.vehicleArray.append(vehicle.Vehicle(road=roadObject, size=(40, 30), lane=randint(0, 2), x=-100, velocity=0, acceleration=3))
 
 
 # Main loop

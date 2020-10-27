@@ -6,10 +6,12 @@ import globalVariables as gV
 
 class Vehicle:
 
-    # startPos = [x, y] (array), size = (width, length) (tuple), velocity = [xVel, yVel] (array)
-    def __init__(self, pos, size, velocity, acceleration):
-        self.pos = np.array(pos)
+    # road (Road), size = (width, length) (tuple), lane (int), x (float), velocity = xVel (float), acceleration = xAcc (float)
+    def __init__(self, road, size, lane, x, velocity, acceleration):
+        self.road = road
+        self.x = x
         self.size = size
+        self.lane = lane
         self.velocity = np.array(velocity)
         self.acceleration = np.array(acceleration)
         self.crashed = False
@@ -18,21 +20,16 @@ class Vehicle:
     # draws everything to do with vehicle
     def draw(self, display):
         # Draw car itself
-        pg.draw.rect(display, gV.black, [self.pos[0], self.pos[1], self.size[0], self.size[1]])
+        pg.draw.rect(display, gV.black, [self.x, self.road.pos[1] + self.road.laneWidth * self.lane * 1.05 + 5, self.size[0], self.size[1]])
         # Visualise the vehicle's stopping distance
-        pg.draw.rect(display, gV.blue, [self.pos[0]+(self.size[0]), self.pos[1],
-                                        self.stoppingDistance, self.size[1]])
+        # pg.draw.rect(display, gV.blue, [self.pos[0]+(self.size[0]), self.pos[1], self.stoppingDistance, self.size[1]])
 
     # move vehicle up to max speed then stop
     def move(self, road):
-        if 0 <= (self.velocity[0] + self.acceleration[0]) <= road.speedLimit:
-            self.velocity[0] += self.acceleration[0]
+        if 0 <= (self.velocity + self.acceleration) <= road.speedLimit:
+            self.velocity += self.acceleration
 
-        if 0 <= (self.velocity[1] + self.acceleration[1]) <= road.speedLimit:
-            self.velocity[1] += self.acceleration[1]
-
-        self.pos[1] += self.velocity[1] * gV.deltaTime
-        self.pos[0] += self.velocity[0] * gV.deltaTime
+        self.x += self.velocity * gV.deltaTime
 
     # checks that the vehicle's next movement is safe
     def checkHazards(self, road, vehiclesArray=None, obstaclesArray=None):
@@ -44,8 +41,8 @@ class Vehicle:
 
         # if an obstacle is within safe stopping distance then stop
         for obstacle in obstaclesArray:
-            if (obstacle.pos[0] + obstacle.size[0] > (self.pos[0]+self.size[0])+self.stoppingDistance > obstacle.pos[0]
-               and obstacle.pos[1] + obstacle.size[1] > (self.pos[1]+self.size[1]) > obstacle.pos[1]):
+            if (obstacle.x + obstacle.size[0] > (self.x+self.size[0])+self.stoppingDistance > obstacle.x
+               and obstacle.lane == self.lane):
                 hazardFound = True
 
         # if another vehicle is within safe stopping distance then stop
@@ -53,16 +50,16 @@ class Vehicle:
             # if the other vehicle is yourself then skip
             if self == otherVehicle:
                 pass
-
-            elif (otherVehicle.pos[0] + otherVehicle.size[0] >= (self.pos[0]+self.size[0])+self.stoppingDistance > otherVehicle.pos[0]
-                  and otherVehicle.pos[1] + otherVehicle.size[1] >= (self.pos[1]+self.size[1]) > otherVehicle.pos[1]):
+            
+            elif (otherVehicle.x + otherVehicle.size[0] >= (self.x+self.size[0])+self.stoppingDistance > otherVehicle.x # 
+                  and otherVehicle.lane == self.lane):
                 hazardFound = True
 
         if hazardFound:
-            self.acceleration = [-3, 0]
+            self.acceleration = -3
 
         else:
-            self.acceleration = [3, 0]
+            self.acceleration = 3
 
     # If the vehicle hits something then it has crashed and this function is called
     def crashed(self):
