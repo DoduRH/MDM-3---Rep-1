@@ -20,14 +20,14 @@ clock = pg.time.Clock()
 simQuit = False
 
 # Create Objects for simulation
-roadObject = road.Road(pos=[0, (gV.displaySize[1]/2)-gV.roadWidth/2], speedLimit=100, laneCount=3, laneWidth=gV.roadWidth, meanArrivalRate=gV.arrivalRate)
+roadObject = road.Road(pos=[0, (gV.displaySize[1]/2)-gV.roadWidth/2], speedLimit=100, laneCount=gV.laneCount, laneWidth=gV.roadWidth, meanArrivalRate=gV.arrivalRate)
 
 # Add obstacle
 roadObject.obstructionArray.append(obstacle.Obstacle(road=roadObject, x=gV.displaySize[0]/1.5, lane=2, size=(30, 40)))
 
 def generateTraffic(road):
     for arrivals in range(0, np.random.poisson(road.meanArrivalRate)):
-        roadObject.vehicleArray.append(vehicle.Vehicle(road=roadObject, size=(40, 30), lane=randint(0, 2), x=-100, velocity=0, acceleration=3))
+        roadObject.vehicleArray.append(vehicle.Vehicle(road=roadObject, size=(40, 30), lane=randint(0, gV.laneCount-1), x=-100, velocity=0, acceleration=3))
 
 
 # Main loop

@@ -18,6 +18,6 @@ grey = (211, 211, 211)
 roadWidth = 40
 # Mean cars arriving every 1 seconds (page 8 https://rosap.ntl.bts.gov/view/dot/16299/dot_16299_DS1.html)
 arrivalRate = 0.06166666666666667
-laneCount = 1
+laneCount = 3
 
 
