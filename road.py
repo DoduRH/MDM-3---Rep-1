@@ -1,6 +1,9 @@
 # Contains the road class
 import pygame as pg
 import globalVariables as gV
+import vehicle
+import obstacle
+import numpy as np
 
 
 class Road:
@@ -11,6 +14,9 @@ class Road:
         self.laneCount = laneCount
         self.laneWidth = laneWidth
         self.meanArrivalRate = meanArrivalRate
+
+        self.vehicleArray = []
+        self.obstructionArray = []
 
     def draw(self, display):
         for i in range(self.laneCount):

@@ -19,14 +19,14 @@ clock = pg.time.Clock()
 simQuit = False
 
 # Create Objects for simulation
-vehicleArray = []
-obstructionArray = [obstacle.Obstacle([gV.displaySize[0]/1.5, (gV.displaySize[1]/2)], (30, 40))]
-roadObject = road.Road([0, (gV.displaySize[1]/2)-gV.roadWidth/2], 100, 1, gV.roadWidth, gV.arrivalRate)
+roadObject = road.Road(pos=[0, (gV.displaySize[1]/2)-gV.roadWidth/2], speedLimit=100, laneCount=1, laneWidth=gV.roadWidth, meanArrivalRate=gV.arrivalRate)
 
+# Add obstacle
+roadObject.obstructionArray.append(obstacle.Obstacle(pos=[gV.displaySize[0]/1.5, (gV.displaySize[1]/2)], size=(30, 40)))
 
 def generateTraffic(road):
     for arrivals in range(0, np.random.poisson(road.meanArrivalRate)):
-        vehicleArray.append(vehicle.Vehicle([-100, (gV.displaySize[1] / 2) - 10], (40, 20), [0, 0], [3, 0]))
+        roadObject.vehicleArray.append(vehicle.Vehicle([-100, (gV.displaySize[1] / 2) - 10], (40, 20), [0, 0], [3, 0]))
 
 
 # Main loop
@@ -47,13 +47,13 @@ while not simQuit:
         generateTraffic(roadObject)
 
     # vehicle handling loop
-    for vehicleObject in vehicleArray:
-        vehicleObject.checkHazards(roadObject, vehicleArray, obstructionArray)
+    for vehicleObject in roadObject.vehicleArray:
+        vehicleObject.checkHazards(roadObject, roadObject.vehicleArray, roadObject.obstructionArray)
         vehicleObject.move(roadObject)
         vehicleObject.draw(simDisplay)
 
     # obstruction handling loop
-    for obstacleObject in obstructionArray:
+    for obstacleObject in roadObject.obstructionArray:
         obstacleObject.draw(simDisplay)
 
     pg.display.update()
