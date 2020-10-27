@@ -25,11 +25,14 @@ class Vehicle:
         # pg.draw.rect(display, gV.blue, [self.x+(self.size[0]), self.road.pos[1] + self.road.laneWidth * self.lane * 1.05 + 5, self.stoppingDistance, self.size[1]])
 
     # move vehicle up to max speed then stop
-    def move(self, road):
-        if 0 <= (self.velocity + self.acceleration) <= road.speedLimit:
+    def move(self):
+        if 0 <= (self.velocity + self.acceleration) <= self.road.speedLimit:
             self.velocity += self.acceleration
 
         self.x += self.velocity * gV.deltaTime
+
+        if self.x > gV.displaySize[0]:
+            self.road.vehicleArray.remove(self)
 
     # checks that the vehicle's next movement is safe
     def checkHazards(self, road, vehiclesArray=None, obstaclesArray=None):

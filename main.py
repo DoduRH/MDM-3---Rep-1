@@ -54,7 +54,7 @@ while not simQuit:
     # vehicle handling loop
     for vehicleObject in roadObject.vehicleArray:
         vehicleObject.checkHazards(roadObject, roadObject.vehicleArray, roadObject.obstructionArray)
-        vehicleObject.move(roadObject)
+        vehicleObject.move()
         vehicleObject.draw(simDisplay)
 
     # obstruction handling loop
