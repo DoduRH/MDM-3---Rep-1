@@ -14,6 +14,7 @@ class Road:
         self.laneCount = laneCount
         self.laneWidth = laneWidth
         self.meanArrivalRate = meanArrivalRate
+        assert len(meanArrivalRate) == laneCount, "meanArrivalRate must have " + laneCount + " elements"
 
         self.vehicleArray = []
         self.obstructionArray = []
@@ -21,3 +22,8 @@ class Road:
     def draw(self, display):
         for i in range(self.laneCount):
             pg.draw.rect(display, gV.grey, [self.pos[0], self.pos[1] + self.laneWidth * i * 1.05, gV.displaySize[0], self.laneWidth])
+
+    def generateTraffic(self):
+        for i in range(self.laneCount):
+            for _ in range(0, np.random.poisson(self.meanArrivalRate[i])):
+                self.vehicleArray.append(vehicle.Vehicle(road=self, size=(40, 30), lane=i, x=-40, velocity=0, acceleration=3))
