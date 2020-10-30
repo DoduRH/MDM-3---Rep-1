@@ -54,7 +54,7 @@ class Vehicle:
             if self == otherVehicle:
                 pass
             
-            elif (otherVehicle.x > self.x and self.x + self.size[0] + self.stoppingDistance > otherVehicle.x 
+            elif (self.x < otherVehicle.x < self.x + self.size[0] + self.stoppingDistance
                   and otherVehicle.lane == self.lane):
                 hazardFound = True
 
