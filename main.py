@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 import matplotlib as plt
 import globalVariables as gV
-from random import randint
+from random import randint, choice
 
 
 # initialise pygame
@@ -39,6 +39,15 @@ while not simQuit:
             simQuit = True
 
         if event.type == pg.KEYDOWN:
+            # Move random car left or right
+            if len(roadObject.vehicleArray) >= 1:
+                if event.key == pg.K_LEFT:
+                    choice(roadObject.vehicleArray).safeLaneChange(-1)
+                    
+                if event.key == pg.K_RIGHT:
+                    choice(roadObject.vehicleArray).safeLaneChange(1)
+
+            # Add cars in specific lanes on number pressed
             if event.unicode.isnumeric() and int(event.unicode) < gV.laneCount:
                 roadObject.vehicleArray.append(vehicle.Vehicle(road=roadObject, size=(40, 30), lane=int(event.unicode), x=-40, velocity=0, acceleration=3))
 

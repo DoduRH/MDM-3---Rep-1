@@ -27,3 +27,7 @@ class Road:
         for i in range(self.laneCount):
             for _ in range(0, np.random.poisson(self.meanArrivalRate[i])):
                 self.vehicleArray.append(vehicle.Vehicle(road=self, size=(40, 30), lane=i, x=-40, velocity=0, acceleration=3))
+
+    # Returns list of cars in specified lane
+    def carsInLane(self, lane):
+        return [x for x in self.vehicleArray if x.lane == lane or x.oldLane == lane]
