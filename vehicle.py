@@ -16,11 +16,12 @@ class Vehicle:
         self.acceleration = np.array(acceleration)
         self.crashed = False
         self.stoppingDistance = 80
+        self.colour = list(np.random.choice(range(256), size=3))
 
     # draws everything to do with vehicle
     def draw(self, display):
         # Draw car itself
-        pg.draw.rect(display, gV.black, [self.x, self.road.pos[1] + self.road.laneWidth * self.lane * 1.05 + 5, self.size[0], self.size[1]])
+        pg.draw.rect(display, self.colour, [self.x, self.road.pos[1] + self.road.laneWidth * self.lane * 1.05 + 5, self.size[0], self.size[1]])
         # Visualise the vehicle's stopping distance
         # pg.draw.rect(display, gV.blue, [self.x+(self.size[0]), self.road.pos[1] + self.road.laneWidth * self.lane * 1.05 + 5, self.stoppingDistance, self.size[1]])
 
