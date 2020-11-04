@@ -25,11 +25,6 @@ roadObject = road.Road(pos=[0, (gV.displaySize[1]/2)-gV.roadWidth/2], speedLimit
 # Add obstacle
 roadObject.obstructionArray.append(obstacle.Obstacle(road=roadObject, x=gV.displaySize[0]/1.5, lane=2, size=(30, 40)))
 
-def generateTraffic(road):
-    for arrivals in range(0, np.random.poisson(road.meanArrivalRate)):
-        roadObject.vehicleArray.append(vehicle.Vehicle(road=roadObject, size=(40, 30), lane=randint(0, gV.laneCount-1), x=-40, velocity=0, acceleration=3))
-
-
 # Main loop
 while not simQuit:
     gV.deltaTime = clock.tick(gV.fps) / 1000
@@ -49,7 +44,7 @@ while not simQuit:
 
     # generate traffic coming down road frequency dependent on poisson distribution
     if round(gV.runTimer, 1) % 1 == 0:
-        generateTraffic(roadObject)
+        roadObject.generateTraffic()
 
     # vehicle handling loop
     for vehicleObject in roadObject.vehicleArray:
