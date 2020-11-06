@@ -18,7 +18,7 @@ class Vehicle:
         self.maxAcceleration = acceleration
         self.maxDeceleration = deceleration
         self.speedLimit = speedlimit
-        self.colour = list(np.random.choice(range(256), size=3))
+        self.colour = (128, 128, 0)
         self.crashed = False
         self.stoppingDistance = 80
         self.changingLane = False
@@ -47,6 +47,7 @@ class Vehicle:
             self.velocity += self.acceleration * gV.deltaTime
             if self.velocity < 0:
                 self.velocity = 0
+            self.colour = [(self.speedLimit - self.velocity)/self.speedLimit * 200, self.velocity/self.speedLimit * 200, 0]
 
         self.x += self.velocity * gV.deltaTime
 
