@@ -57,7 +57,7 @@ class Vehicle:
     # checks that the vehicle's next movement is safe
     def checkHazards(self, road, vehiclesArray=None, obstaclesArray=None):
         # if there are no hazards within stopping distance then there is nothing to check as simulation is empty
-        if (obstaclesArray and vehiclesArray) is None:
+        if obstaclesArray is None and vehiclesArray is None:
             return
 
         hazardFound = False
