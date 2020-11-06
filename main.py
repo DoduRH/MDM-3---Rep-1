@@ -22,7 +22,7 @@ gV.deltaTime = gV.fps/1000
 simQuit = False
 
 # Create Objects for simulation
-roadObject = road.Road(pos=[0, (gV.displaySize[1]/2)-gV.roadWidth/2], speedLimit=100, laneCount=gV.laneCount, laneWidth=gV.roadWidth, meanArrivalRate=gV.arrivalRate)
+roadObject = road.Road(pos=[0, (gV.displaySize[1]/2)-gV.roadWidth/2], laneCount=gV.laneCount, laneWidth=gV.roadWidth, meanArrivalRate=gV.arrivalRate)
 
 # Add obstacle
 roadObject.obstructionArray.append(obstacle.Obstacle(road=roadObject, x=gV.displaySize[0]/1.5, lane=2, size=(30, 40)))
@@ -51,7 +51,7 @@ while not simQuit:
 
             # Add cars in specific lanes on number pressed
             if event.unicode.isnumeric() and int(event.unicode) < gV.laneCount:
-                roadObject.vehicleArray.append(vehicle.Vehicle(road=roadObject, size=(40, 30), lane=int(event.unicode), x=-40, velocity=0, acceleration=3))
+                roadObject.vehicleArray.append(vehicle.Vehicle(road=roadObject, size=(40, 30), lane=int(event.unicode), x=-40, speedlimit=np.random.normal(*gV.maxSpeedDist), velocity=0, acceleration=gV.acceleration, deceleration=gV.deceleration))
 
     # generate traffic coming down road frequency dependent on poisson distribution
     if round(gV.runTimer, 1) % 1 == 0:

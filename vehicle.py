@@ -9,18 +9,21 @@ from random import randint
 class Vehicle:
 
     # road (Road), size = (width, length) (tuple), lane (int), x (float), velocity = xVel (float), acceleration = xAcc (float)
-    def __init__(self, road, size, lane, x, velocity, acceleration):
+    def __init__(self, road, size, lane, x, speedlimit, velocity, acceleration, deceleration):
         self.road = road
         self.x = x
         self.size = size
         self.lane = lane
-        self.velocity = np.array(velocity)
-        self.acceleration = np.array(acceleration)
+        self.velocity = velocity
+        self.maxAcceleration = acceleration
+        self.maxDeceleration = deceleration
+        self.speedLimit = speedlimit
         self.colour = list(np.random.choice(range(256), size=3))
         self.crashed = False
         self.stoppingDistance = 80
         self.changingLane = False
         self.oldLane = -1
+        self.acceleration = 0
 
     # draws everything to do with vehicle
     def draw(self, display):
@@ -40,8 +43,10 @@ class Vehicle:
 
     # move vehicle up to max speed then stop
     def move(self):
-        if 0 <= (self.velocity + self.acceleration) <= self.road.speedLimit:
-            self.velocity += self.acceleration
+        if (self.velocity + self.acceleration) <= self.speedLimit:
+            self.velocity += self.acceleration * gV.deltaTime
+            if self.velocity < 0:
+                self.velocity = 0
 
         self.x += self.velocity * gV.deltaTime
 
@@ -59,8 +64,7 @@ class Vehicle:
 
         # if an obstacle is within safe stopping distance then stop
         for obstacle in obstaclesArray:
-            if (obstacle.x + obstacle.size[0] > (self.x+self.size[0])+self.stoppingDistance > obstacle.x
-               and obstacle.lane == self.lane):
+            if obstacle.x < self.x + self.size[0] + self.stoppingDistance and obstacle.lane == self.lane:
                 hazardFound = True
                 hazards.append(obstacle)
 
@@ -78,7 +82,7 @@ class Vehicle:
             closestHazard = min(hazards, key=lambda k: k.x-self.x)
             hazardDistance = closestHazard.x - self.x
             if hazardDistance < 100:
-                self.acceleration = -3
+                self.acceleration = self.maxDeceleration
 
             changed = False
             # Try changing left and right
@@ -87,10 +91,10 @@ class Vehicle:
                 changed = self.safeLaneChange(1)
             # Otherwise decelerate
             if not changed:
-                self.acceleration = -3
+                self.acceleration = self.maxDeceleration
 
         else:
-            self.acceleration = 3
+            self.acceleration = self.maxAcceleration
 
     # If the vehicle hits something then it has crashed and this function is called
     def crashed(self):
@@ -101,14 +105,14 @@ class Vehicle:
         # Check is a valid lane
         targetLane = self.lane + direction
         if targetLane < 0 or targetLane >= self.road.laneCount:
-            self.log("Lane change failed - lack of lanes")
+            # self.log("Lane change failed - lack of lanes")
             return False
         
         # Check lane is not obstructed by another car
         newLaneTraffic = self.road.carsInLane(targetLane)
         for car in newLaneTraffic:
             if math.isclose(car.x, self.x, abs_tol=120): # Should take relative speed into account
-                self.log("lane change failed - car too close")
+                # self.log("lane change failed - car too close")
                 return False
 
         self.changeLane(direction)

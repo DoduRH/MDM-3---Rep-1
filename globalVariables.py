@@ -21,4 +21,7 @@ roadWidth = 40
 arrivalRate = [0.02, 0.02, 0.02]
 laneCount = 3
 
+acceleration = 3 # need a good source of 'normal' acceleration on motorway
+deceleration = -10 # https://copradar.com/chapts/references/acceleration.html#:~:text=Many%20safety%20experts%20use%2015,maximum%20braking%20around%200.8%20g's.
 
+maxSpeedDist = (30, 2.2) # mean of 70 mph, std of 5 mph
