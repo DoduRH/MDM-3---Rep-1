@@ -16,6 +16,8 @@ pg.init()
 simDisplay = pg.display.set_mode(gV.displaySize)
 clock = pg.time.Clock()
 
+gV.deltaTime = gV.fps/1000
+
 # Main loop flag
 simQuit = False
 
@@ -27,7 +29,7 @@ roadObject.obstructionArray.append(obstacle.Obstacle(road=roadObject, x=gV.displ
 
 # Main loop
 while not simQuit:
-    gV.deltaTime = clock.tick(gV.fps) / 1000
+    clock.tick(gV.fps)
     gV.runTimer += gV.deltaTime
     simDisplay.fill(gV.white)
     roadObject.draw(simDisplay)
