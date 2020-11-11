@@ -3,7 +3,6 @@ import pygame as pg
 import numpy as np
 import globalVariables as gV
 import math
-from random import randint
 
 
 class Vehicle:
@@ -79,8 +78,8 @@ class Vehicle:
             # if the other vehicle is yourself then skip
             if self == otherVehicle:
                 pass
-            
-            elif otherVehicle.x > self.x and self.x + self.size[0] + self.stoppingDistance > otherVehicle.x:
+
+            elif self.x < otherVehicle.x < self.x + self.size[0] + self.stoppingDistance:
                 hazardFound = True
                 hazards.append(otherVehicle)
 
@@ -106,14 +105,14 @@ class Vehicle:
     def crashed(self):
         self.crashed = True
 
-    # Check for obstructions, then change lane.  Return True or false depending if the change was sucsessful
+    # Check for obstructions, then change lane.  Return True or false depending if the change was successful
     def safeLaneChange(self, direction):
         # Check is a valid lane
         targetLane = self.lane + direction
         if targetLane < 0 or targetLane >= self.road.laneCount:
             # self.log("Lane change failed - lack of lanes")
             return False
-        
+
         # Check lane is not obstructed by another car
         newLaneTraffic = self.road.carsInLane(targetLane)
         for car in newLaneTraffic:
@@ -130,8 +129,6 @@ class Vehicle:
         self.lane += direction
         self.changingLane = True
         self.changingProgress = 0
-
-        
         self.changingTime = 50
 
     # Log message including car colour (could swap for id or equivalent)
