@@ -69,7 +69,8 @@ class Vehicle:
 
         # if an obstacle is within safe stopping distance then stop
         for obstacle in obstaclesArray:
-            if obstacle.x < self.x + self.size[0] + self.stoppingDistance and obstacle.lane == self.lane:
+            # Check it is in front, within 'range' and in same lane as self
+            if self.x < obstacle.x < self.x + self.size[0] + self.stoppingDistance and obstacle.lane == self.lane:
                 hazardFound = True
                 hazards.append(obstacle)
 
