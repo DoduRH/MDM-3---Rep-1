@@ -15,6 +15,7 @@ from random import choice
 pg.init()
 timer_font = pg.font.SysFont('Comic Sans MS', 30)
 simDisplay = pg.display.set_mode(gV.displaySize)
+pg.display.set_caption('Highways England Connected Vehicle Simulation Environment')
 clock = pg.time.Clock()
 
 # Main loop flag
