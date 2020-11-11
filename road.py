@@ -17,6 +17,8 @@ class Road:
 
         self.vehicleArray = []
         self.obstructionArray = []
+        self.currentCarIndex = -1
+        self.font = pg.font.SysFont('Comic Sans MS', 30)
 
     def draw(self, display):
         for i in range(self.laneCount):
@@ -30,3 +32,7 @@ class Road:
     # Returns list of cars in specified lane
     def carsInLane(self, lane):
         return [x for x in self.vehicleArray if x.lane == lane or x.oldLane == lane]
+
+    def newCarIndex(self):
+        self.currentCarIndex += 1
+        return self.currentCarIndex
