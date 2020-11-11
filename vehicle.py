@@ -3,7 +3,6 @@ import pygame as pg
 import numpy as np
 import globalVariables as gV
 import math
-from random import randint
 
 
 class Vehicle:
@@ -60,8 +59,9 @@ class Vehicle:
 
         # if an obstacle is within safe stopping distance then stop
         for obstacle in obstaclesArray:
-            if (obstacle.x + obstacle.size[0] > (self.x+self.size[0])+self.stoppingDistance > obstacle.x
-               and obstacle.lane == self.lane):
+            if (obstacle.lane == self.lane
+               and ((obstacle.x + obstacle.size[0] > (self.x+self.size[0])+self.stoppingDistance > obstacle.x)
+               or (self.x + self.size[0] < (obstacle.x and obstacle.x+obstacle.size[0]) < (self.x+self.size[0])+self.stoppingDistance))):
                 hazardFound = True
                 hazards.append(obstacle)
 
@@ -70,7 +70,7 @@ class Vehicle:
             # if the other vehicle is yourself then skip
             if self == otherVehicle:
                 pass
-            
+
             elif self.x < otherVehicle.x < self.x + self.size[0] + self.stoppingDistance:
                 hazardFound = True
                 hazards.append(otherVehicle)
@@ -104,7 +104,7 @@ class Vehicle:
         if targetLane < 0 or targetLane >= self.road.laneCount:
             # self.log("Lane change failed - lack of lanes")
             return False
-        
+
         # Check lane is not obstructed by another car
         newLaneTraffic = self.road.carsInLane(targetLane)
         for car in newLaneTraffic:
