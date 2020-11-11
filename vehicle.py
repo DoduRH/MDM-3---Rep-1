@@ -134,4 +134,4 @@ class Vehicle:
 
     # Log message including car colour (could swap for id or equivalent)
     def log(self, *message):
-        print(self.colour, *message)
+        print(self.number, *message)
