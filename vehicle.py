@@ -20,7 +20,7 @@ class Vehicle:
         self.stoppingDistance = 80
         self.changingLane = False
         self.oldLane = -1
-        self.topSpeedVar = np.random.randint(-20, 20)
+        self.topSpeedVar = np.random.randint(-20, 30)
 
     # draws everything to do with vehicle
     def draw(self, display):

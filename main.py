@@ -8,11 +8,12 @@ import numpy as np
 import pandas as pd
 import matplotlib as plt
 import globalVariables as gV
-from random import randint, choice
+from random import choice
 
 
 # initialise pygame
 pg.init()
+timer_font = pg.font.SysFont('Comic Sans MS', 30)
 simDisplay = pg.display.set_mode(gV.displaySize)
 clock = pg.time.Clock()
 
@@ -25,6 +26,8 @@ roadObject = road.Road(pos=[0, (gV.displaySize[1]/2)-gV.roadWidth/2], speedLimit
 # Add obstacle
 roadObject.obstructionArray.append(obstacle.Obstacle(road=roadObject, x=gV.displaySize[0]/1.5, lane=1, size=(30, 40)))
 
+# Record the starting time of simulation
+startTime = time.time()
 # Main loop
 while not simQuit:
     gV.deltaTime = clock.tick(gV.fps) / 1000
@@ -64,6 +67,10 @@ while not simQuit:
     # obstruction handling loop
     for obstacleObject in roadObject.obstructionArray:
         obstacleObject.draw(simDisplay)
+
+    # Draw time to the display
+    timer_surface = timer_font.render(str(round(time.time() - startTime, 3)), False, gV.black)
+    simDisplay.blit(timer_surface, (5, 0))
 
     pg.display.update()
 
