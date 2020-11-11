@@ -21,6 +21,7 @@ class Vehicle:
         self.stoppingDistance = 80
         self.changingLane = False
         self.oldLane = -1
+        self.topSpeedVar = np.random.randint(-20, 20)
 
     # draws everything to do with vehicle
     def draw(self, display):
@@ -40,7 +41,7 @@ class Vehicle:
 
     # move vehicle up to max speed then stop
     def move(self):
-        if 0 <= (self.velocity + self.acceleration) <= self.road.speedLimit:
+        if 0 <= (self.velocity + self.acceleration) <= self.road.speedLimit + self.topSpeedVar:
             self.velocity += self.acceleration
 
         self.x += self.velocity * gV.deltaTime
@@ -70,7 +71,7 @@ class Vehicle:
             if self == otherVehicle:
                 pass
             
-            elif otherVehicle.x > self.x and self.x + self.size[0] + self.stoppingDistance > otherVehicle.x:
+            elif self.x < otherVehicle.x < self.x + self.size[0] + self.stoppingDistance:
                 hazardFound = True
                 hazards.append(otherVehicle)
 
@@ -96,19 +97,19 @@ class Vehicle:
     def crashed(self):
         self.crashed = True
 
-    # Check for obstructions, then change lane.  Return True or false depending if the change was sucsessful
+    # Check for obstructions, then change lane.  Return True or false depending if the change was successful
     def safeLaneChange(self, direction):
         # Check is a valid lane
         targetLane = self.lane + direction
         if targetLane < 0 or targetLane >= self.road.laneCount:
-            self.log("Lane change failed - lack of lanes")
+            # self.log("Lane change failed - lack of lanes")
             return False
         
         # Check lane is not obstructed by another car
         newLaneTraffic = self.road.carsInLane(targetLane)
         for car in newLaneTraffic:
-            if math.isclose(car.x, self.x, abs_tol=120): # Should take relative speed into account
-                self.log("lane change failed - car too close")
+            if math.isclose(car.x, self.x, abs_tol=120):  # Should take relative speed into account
+                # self.log("lane change failed - car too close")
                 return False
 
         self.changeLane(direction)
@@ -120,8 +121,6 @@ class Vehicle:
         self.lane += direction
         self.changingLane = True
         self.changingProgress = 0
-
-        
         self.changingTime = 50
 
     # Log message including car colour (could swap for id or equivalent)
