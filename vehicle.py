@@ -8,7 +8,7 @@ import math
 class Vehicle:
 
     # road (Road), size = (width, length) (tuple), lane (int), x (float), velocity = xVel (float), acceleration = xAcc (float)
-    def __init__(self, road, size, lane, x, speedlimit, velocity, acceleration, deceleration):
+    def __init__(self, road, size, lane, x, speedLimit, velocity, acceleration, deceleration):
         self.road = road
         self.x = x
         self.size = size
@@ -16,10 +16,10 @@ class Vehicle:
         self.velocity = velocity
         self.maxAcceleration = acceleration
         self.maxDeceleration = deceleration
-        self.speedLimit = speedlimit
+        self.speedLimit = speedLimit
         self.colour = (128, 128, 0)
         self.crashed = False
-        self.stoppingDistance = 80
+        self.stoppingDistance = speedLimit * 2.5
         self.changingLane = False
         self.oldLane = -1
         self.acceleration = 0
@@ -43,7 +43,7 @@ class Vehicle:
             # self.road.font.render_to(display, [self.x, self.road.pos[1] + self.road.laneWidth * self.lane * 1.05 + 5, self.size[0], self.size[1]], str(self.number))
             display.blit(text, [self.x + self.size[0]/2 - text.get_rect().width/2, self.road.pos[1] + self.road.laneWidth * self.lane * 1.05 - 2])
         # Visualise the vehicle's stopping distance
-        # pg.draw.rect(display, gV.blue, [self.x+(self.size[0]), self.road.pos[1] + self.road.laneWidth * self.lane * 1.05 + 5, self.stoppingDistance, self.size[1]])
+        pg.draw.rect(display, gV.blue, [self.x+(self.size[0]), self.road.pos[1] + self.road.laneWidth * self.lane * 1.05 + 5, self.stoppingDistance, self.size[1]])
 
     # move vehicle up to max speed then stop
     def move(self):
@@ -74,7 +74,7 @@ class Vehicle:
                 hazardFound = True
                 hazards.append(obstacle)
 
-        # if another vehicle is within safe stopping distance then stop
+        # if another vehicle is within safe stopping distance then record hazard
         for otherVehicle in self.road.carsInLane(self.lane):
             # if the other vehicle is yourself then skip
             if self == otherVehicle:
@@ -84,11 +84,17 @@ class Vehicle:
                 hazardFound = True
                 hazards.append(otherVehicle)
 
+        # If hazards are found then find the closest one and act accordingly
         if hazardFound:
             closestHazard = min(hazards, key=lambda k: k.x-self.x)
-            hazardDistance = closestHazard.x - self.x
-            if hazardDistance < 100:
-                self.acceleration = self.maxDeceleration
+            hazardDistance = closestHazard.x - (self.x + self.size[0])
+            if hazardDistance < self.stoppingDistance:
+                # Break maximally for the closest 50% of the stopping distance
+                self.acceleration = self.maxDeceleration/(hazardDistance/(self.stoppingDistance*0.5))
+                self.log("hazard distance", hazardDistance, "current acceleration", self.acceleration, "stopping distance", self.stoppingDistance)
+                if self.acceleration <= self.maxDeceleration:
+                    self.log("Max Breaking Force Reached")
+                    self.acceleration = self.maxDeceleration
 
             changed = False
             # Try changing left and right
@@ -97,7 +103,12 @@ class Vehicle:
                 changed = self.safeLaneChange(1)
             # Otherwise decelerate
             if not changed:
-                self.acceleration = self.maxDeceleration
+                # Break maximally for the closest 50% of the stopping distance
+                self.acceleration = self.maxDeceleration/(hazardDistance/(self.stoppingDistance*0.5))
+                self.log("hazard distance", hazardDistance, "current acceleration", self.acceleration)
+                if self.acceleration <= self.maxDeceleration:
+                    self.log("Max Breaking Force Reached")
+                    self.acceleration = self.maxDeceleration
 
         else:
             self.acceleration = self.maxAcceleration

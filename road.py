@@ -27,7 +27,7 @@ class Road:
     def generateTraffic(self):
         for i in range(self.laneCount):
             for _ in range(0, np.random.poisson(self.meanArrivalRate[i])):
-                self.vehicleArray.append(vehicle.Vehicle(road=self, size=(40, 30), lane=i, x=-40, speedlimit=np.random.normal(*gV.maxSpeedDist), velocity=0, acceleration=gV.acceleration, deceleration=gV.deceleration))
+                self.vehicleArray.append(vehicle.Vehicle(road=self, size=(40, 30), lane=i, x=-40, speedLimit=np.random.normal(*gV.maxSpeedDist), velocity=0, acceleration=gV.acceleration, deceleration=gV.deceleration))
 
     # Returns list of cars in specified lane
     def carsInLane(self, lane):

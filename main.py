@@ -55,7 +55,7 @@ while not simQuit:
 
             # Add cars in specific lanes on number pressed
             if event.unicode.isnumeric() and int(event.unicode) < gV.laneCount:
-                roadObject.vehicleArray.append(vehicle.Vehicle(road=roadObject, size=(40, 30), lane=int(event.unicode), x=-40, speedlimit=np.random.normal(*gV.maxSpeedDist), velocity=0, acceleration=gV.acceleration, deceleration=gV.deceleration))
+                roadObject.vehicleArray.append(vehicle.Vehicle(road=roadObject, size=(40, 30), lane=int(event.unicode), x=-40, speedLimit=np.random.normal(*gV.maxSpeedDist), velocity=0, acceleration=gV.acceleration, deceleration=gV.deceleration))
 
     # generate traffic coming down road frequency dependent on poisson distribution
     if round(gV.runTimer, 1) % 1 == 0:
