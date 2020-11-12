@@ -129,6 +129,7 @@ class Vehicle:
             # self.log("Lane change failed - lack of lanes")
             return False
 
+        # check if already in the process of changing lane
         if 0 < self.changingProgress < self.changingTime:
             # self.log("Lane change failed - currently changing lanes")
             return False
