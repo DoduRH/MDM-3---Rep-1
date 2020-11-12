@@ -20,10 +20,12 @@ class Vehicle:
         self.speedLimit = speedLimit
         self.colour = (128, 128, 0)
         self.crashed = False
-        self.stoppingDistance = speedLimit * 2.5
+        self.stoppingDistance = speedLimit * 3
         self.changingLane = False
         self.oldLane = -1
         self.acceleration = 0
+        self.changingProgress = 0
+        self.changingTime = 50
         self.number = road.newCarIndex()
         self.spawnTime = time.time()
 
@@ -76,7 +78,7 @@ class Vehicle:
         # if an obstacle is within safe stopping distance then stop
         for obstacle in obstaclesArray:
             # Check it is in front, within 'range' and in same lane as self
-            if self.x < obstacle.x < self.x + self.size[0] + self.stoppingDistance and obstacle.lane == self.lane:
+            if self.x + self.size[0] < obstacle.x < self.x + self.size[0] + self.stoppingDistance and obstacle.lane == self.lane:
                 hazardFound = True
                 hazards.append(obstacle)
 
@@ -125,6 +127,10 @@ class Vehicle:
         targetLane = self.lane + direction
         if targetLane < 0 or targetLane >= self.road.laneCount:
             # self.log("Lane change failed - lack of lanes")
+            return False
+
+        if 0 < self.changingProgress < self.changingTime:
+            # self.log("Lane change failed - currently changing lanes")
             return False
 
         # Check lane is not obstructed by another car
