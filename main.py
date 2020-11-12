@@ -31,7 +31,9 @@ def processData(crossingTimes):
         avgTime /= len(crossingTimes)
 
     print("\nStats\n--------------------------------------------------------------------------------------------------")
-    print("Average time taken to cross road:", avgTime, "s")
+    print("Average time taken for 1 vehicle to cross road:", avgTime, "s")
+    print("Vehicles per second:", 1/avgTime)
+    print("--------------------------------------------------------------------------------------------------")
 
 
 # Main loop flag
