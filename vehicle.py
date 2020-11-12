@@ -91,7 +91,6 @@ class Vehicle:
             if hazardDistance < self.stoppingDistance:
                 # Break maximally for the closest 50% of the stopping distance
                 self.acceleration = self.maxDeceleration/(hazardDistance/(self.stoppingDistance*0.5))
-                self.log("hazard distance", hazardDistance, "current acceleration", self.acceleration, "stopping distance", self.stoppingDistance)
                 if self.acceleration <= self.maxDeceleration:
                     self.log("Max Breaking Force Reached")
                     self.acceleration = self.maxDeceleration
@@ -105,7 +104,6 @@ class Vehicle:
             if not changed:
                 # Break maximally for the closest 50% of the stopping distance
                 self.acceleration = self.maxDeceleration/(hazardDistance/(self.stoppingDistance*0.5))
-                self.log("hazard distance", hazardDistance, "current acceleration", self.acceleration)
                 if self.acceleration <= self.maxDeceleration:
                     self.log("Max Breaking Force Reached")
                     self.acceleration = self.maxDeceleration
