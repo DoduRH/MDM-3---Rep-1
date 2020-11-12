@@ -3,6 +3,7 @@ import pygame as pg
 import numpy as np
 import globalVariables as gV
 import math
+import time
 
 
 class Vehicle:
@@ -24,6 +25,7 @@ class Vehicle:
         self.oldLane = -1
         self.acceleration = 0
         self.number = road.newCarIndex()
+        self.spawnTime = time.time()
 
     # draws everything to do with vehicle
     def draw(self, display):
@@ -43,7 +45,7 @@ class Vehicle:
             # self.road.font.render_to(display, [self.x, self.road.pos[1] + self.road.laneWidth * self.lane * 1.05 + 5, self.size[0], self.size[1]], str(self.number))
             display.blit(text, [self.x + self.size[0]/2 - text.get_rect().width/2, self.road.pos[1] + self.road.laneWidth * self.lane * 1.05 - 2])
         # Visualise the vehicle's stopping distance
-        pg.draw.rect(display, gV.blue, [self.x+(self.size[0]), self.road.pos[1] + self.road.laneWidth * self.lane * 1.05 + 5, self.stoppingDistance, self.size[1]])
+        # pg.draw.rect(display, gV.blue, [self.x+(self.size[0]), self.road.pos[1] + self.road.laneWidth * self.lane * 1.05 + 5, self.stoppingDistance, self.size[1]])
 
     # move vehicle up to max speed then stop
     def move(self):
@@ -57,6 +59,10 @@ class Vehicle:
 
         if self.x > gV.displaySize[0]:
             self.road.vehicleArray.remove(self)
+            # return finish time
+            return time.time() - self.spawnTime
+
+        return
 
     # checks that the vehicle's next movement is safe
     def checkHazards(self, road, vehiclesArray=None, obstaclesArray=None):
@@ -90,9 +96,8 @@ class Vehicle:
             hazardDistance = closestHazard.x - (self.x + self.size[0])
             if hazardDistance < self.stoppingDistance:
                 # Break maximally for the closest 50% of the stopping distance
-                self.acceleration = self.maxDeceleration/(hazardDistance/(self.stoppingDistance*0.5))
+                self.acceleration = self.maxDeceleration/(hazardDistance/(self.stoppingDistance*0.3))
                 if self.acceleration <= self.maxDeceleration:
-                    self.log("Max Breaking Force Reached")
                     self.acceleration = self.maxDeceleration
 
             changed = False
@@ -103,9 +108,8 @@ class Vehicle:
             # Otherwise decelerate
             if not changed:
                 # Break maximally for the closest 50% of the stopping distance
-                self.acceleration = self.maxDeceleration/(hazardDistance/(self.stoppingDistance*0.5))
+                self.acceleration = self.maxDeceleration/(hazardDistance/(self.stoppingDistance*0.3))
                 if self.acceleration <= self.maxDeceleration:
-                    self.log("Max Breaking Force Reached")
                     self.acceleration = self.maxDeceleration
 
         else:
