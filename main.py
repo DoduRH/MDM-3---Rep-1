@@ -32,7 +32,8 @@ def processData(crossingTimes):
 
     print("\nStats\n--------------------------------------------------------------------------------------------------")
     print("Average time taken for 1 vehicle to cross road:", avgTime, "s")
-    print("Vehicles per second:", 1/avgTime)
+    if avgTime != 0:
+        print("Vehicles per second:", 1/avgTime)
     print("--------------------------------------------------------------------------------------------------")
 
 
@@ -110,6 +111,10 @@ while not simQuit:
             gV.vehicleCrossingTimes.append(vehicleFinishTime)
             vehicleObject.log("Time to cross road", vehicleFinishTime)
         vehicleObject.draw(simDisplay)
+
+    # Recalculates the average velocity of all vehicles in each lane
+    for laneNum in range(roadObject.laneCount):
+        roadObject.calcLaneFlowRate(laneNum)
 
     # obstruction handling loop
     for obstacleObject in roadObject.obstructionArray:

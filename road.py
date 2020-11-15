@@ -12,6 +12,7 @@ class Road:
         self.pos = pos
         self.laneCount = laneCount
         self.laneWidth = laneWidth
+        self.laneFlowRates = np.zeros(laneCount)
         self.meanArrivalRate = meanArrivalRate
         assert len(meanArrivalRate) == laneCount, "meanArrivalRate must have " + laneCount + " elements"
 
@@ -55,6 +56,21 @@ class Road:
     # Returns list of cars in specified lane
     def carsInLane(self, lane):
         return [x for x in self.vehicleArray if x.lane == lane or x.oldLane == lane]
+
+    # returns the average velocity of vehicles in a lane
+    def calcLaneFlowRate(self, lane):
+        vehiclesInLane = [x for x in self.vehicleArray if x.lane == lane or x.oldLane == lane]
+        totalVelocity = 0
+        for vehicleObject in vehiclesInLane:
+            totalVelocity += vehicleObject.velocity
+
+        if len(vehiclesInLane) != 0:
+            avgVelocity = totalVelocity/len(vehiclesInLane)
+
+        else:
+            avgVelocity = 0
+
+        self.laneFlowRates[lane] += avgVelocity
 
     def newCarIndex(self):
         self.currentCarIndex += 1
