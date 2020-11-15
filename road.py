@@ -26,7 +26,6 @@ class Road:
 
     def generateTraffic(self):
         for i in range(self.laneCount):
-            vehicleSpawned = False
             for _ in range(0, np.random.poisson(self.meanArrivalRate[i])):
 
                 if len(self.vehicleArray) == 0:
@@ -38,21 +37,20 @@ class Road:
                 else:
                     print("length of vehicle array:", len(self.vehicleArray))
                     # check for pre-existing cars within same lane to stop cars spawning on-top of each other
+                    vehicleFound = False
                     for vehicleObject in self.vehicleArray:
-                        print(vehicleObject.number)
                         if (vehicleObject.lane == i) and (-40 < vehicleObject.x < (0 + vehicleObject.size[0])):
-                            print("Error spawning car - car intersects with existing car in this lane")
+                            vehicleFound = True
 
-                        elif vehicleSpawned:
-                            print("Error spawning car - car already spawned this for loop, breaking loop")
-                            break
+                    if vehicleFound:
+                        print("Error generating car car already in lane")
 
-                        else:
-                            self.vehicleArray.append(vehicle.Vehicle(road=self, size=(40, 30), lane=i, x=-40,
-                                                                     speedLimit=np.random.normal(*gV.maxSpeedDist),
-                                                                     velocity=0, acceleration=gV.acceleration,
-                                                                     deceleration=gV.deceleration))
-                            vehicleSpawned = True
+                    else:
+                        self.vehicleArray.append(vehicle.Vehicle(road=self, size=(40, 30), lane=i, x=-40,
+                                                                 speedLimit=np.random.normal(*gV.maxSpeedDist),
+                                                                 velocity=0,
+                                                                 acceleration=gV.acceleration,
+                                                                 deceleration=gV.deceleration))
 
     # Returns list of cars in specified lane
     def carsInLane(self, lane):
