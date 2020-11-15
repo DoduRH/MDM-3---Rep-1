@@ -44,7 +44,6 @@ class Vehicle:
                 self.changingProgress += 1
         else:
             pg.draw.rect(display, self.colour, [self.x, self.road.pos[1] + self.road.laneWidth * self.lane * 1.05 + 5, self.size[0], self.size[1]])
-            # self.road.font.render_to(display, [self.x, self.road.pos[1] + self.road.laneWidth * self.lane * 1.05 + 5, self.size[0], self.size[1]], str(self.number))
             display.blit(text, [self.x + self.size[0]/2 - text.get_rect().width/2, self.road.pos[1] + self.road.laneWidth * self.lane * 1.05 - 2])
         # Visualise the vehicle's stopping distance
         # pg.draw.rect(display, gV.blue, [self.x+(self.size[0]), self.road.pos[1] + self.road.laneWidth * self.lane * 1.05 + 5, self.stoppingDistance, self.size[1]])
@@ -97,7 +96,7 @@ class Vehicle:
             closestHazard = min(hazards, key=lambda k: k.x-self.x)
             hazardDistance = closestHazard.x - (self.x + self.size[0])
             if hazardDistance < self.stoppingDistance:
-                # Break maximally for the closest 50% of the stopping distance
+                # Break maximally for the closest 30% of the stopping distance
                 self.acceleration = self.maxDeceleration/(hazardDistance/(self.stoppingDistance*0.3))
                 if self.acceleration <= self.maxDeceleration:
                     self.acceleration = self.maxDeceleration
@@ -109,13 +108,14 @@ class Vehicle:
                 changed = self.safeLaneChange(1)
             # Otherwise decelerate
             if not changed:
-                # Break maximally for the closest 50% of the stopping distance
+                # Break maximally for the closest 30% of the stopping distance
                 self.acceleration = self.maxDeceleration/(hazardDistance/(self.stoppingDistance*0.3))
                 if self.acceleration <= self.maxDeceleration:
                     self.acceleration = self.maxDeceleration
 
         else:
             self.acceleration = self.maxAcceleration
+            self.checkLaneFlowRates(road)
 
     # If the vehicle hits something then it has crashed and this function is called
     def crashed(self):
@@ -151,6 +151,16 @@ class Vehicle:
         self.changingLane = True
         self.changingProgress = 0
         self.changingTime = 50
+
+    # check the flow rates of all lanes. If one is higher than current lane change to lane with higher flow rate
+    def checkLaneFlowRates(self, road):
+        for lane in range(road.laneCount):
+            if road.laneFlowRates[lane] > road.laneFlowRates[self.lane]:
+                if lane > self.lane:
+                    self.safeLaneChange(1)
+
+                else:
+                    self.safeLaneChange(-1)
 
     # Log message including car colour (could swap for id or equivalent)
     def log(self, *message):

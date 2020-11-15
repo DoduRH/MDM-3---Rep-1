@@ -22,7 +22,7 @@ gV.deltaTime = gV.fps/1000
 
 
 # define functions here
-def processData(crossingTimes):
+def processData(crossingTimes, road):
 
     avgTime = 0
     for t in crossingTimes:
@@ -30,10 +30,18 @@ def processData(crossingTimes):
     if len(crossingTimes) > 0:
         avgTime /= len(crossingTimes)
 
+    avgVelocity = 0
+    for lane in range(road.laneCount):
+        avgVelocity += road.laneFlowRates[lane]
+    avgVelocity /= road.laneCount
+
     print("\nStats\n--------------------------------------------------------------------------------------------------")
     print("Average time taken for 1 vehicle to cross road:", avgTime, "s")
     if avgTime != 0:
         print("Vehicles per second:", 1/avgTime)
+
+    print("Average velocity of each lane:", road.laneFlowRates)
+    print("Average velocity of all lanes:", avgVelocity)
     print("--------------------------------------------------------------------------------------------------")
 
 
@@ -55,7 +63,7 @@ roadObject = road.Road(pos=[0, (gV.displaySize[1]/2)-gV.roadWidth/2], laneCount=
 
 # Add obstacle
 roadObject.obstructionArray.append(obstacle.Obstacle(road=roadObject, x=gV.displaySize[0]/1.5, lane=0, size=(30, 40)))
-roadObject.obstructionArray.append(obstacle.Obstacle(road=roadObject, x=gV.displaySize[0]/1.5, lane=1, size=(30, 40)))
+# roadObject.obstructionArray.append(obstacle.Obstacle(road=roadObject, x=gV.displaySize[0]/1.5, lane=1, size=(30, 40)))
 
 # Record the starting time of simulation
 startTime = time.time()
@@ -70,7 +78,7 @@ while not simQuit:
     for event in pg.event.get():
         # If red cross pressed then quit main loop
         if event.type == pg.QUIT:
-            processData(gV.vehicleCrossingTimes)
+            processData(gV.vehicleCrossingTimes, roadObject)
             simQuit = True
 
         if event.type == pg.KEYDOWN:
@@ -92,7 +100,8 @@ while not simQuit:
 
                 else:
                     if carSpawnCheck():
-                        print("Error spawning car")
+                        pass
+                        # print("Error spawning car")
                     else:
                         roadObject.vehicleArray.append(
                             vehicle.Vehicle(road=roadObject, size=(40, 30), lane=int(event.unicode), x=-40,
@@ -107,9 +116,10 @@ while not simQuit:
     for vehicleObject in roadObject.vehicleArray:
         vehicleObject.checkHazards(roadObject, roadObject.vehicleArray, roadObject.obstructionArray)
         vehicleFinishTime = vehicleObject.move()
+
         if vehicleFinishTime is not None and vehicleFinishTime > 0:
             gV.vehicleCrossingTimes.append(vehicleFinishTime)
-            vehicleObject.log("Time to cross road", vehicleFinishTime)
+
         vehicleObject.draw(simDisplay)
 
     # Recalculates the average velocity of all vehicles in each lane

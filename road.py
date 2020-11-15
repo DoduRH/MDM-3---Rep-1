@@ -36,15 +36,15 @@ class Road:
                                                              deceleration=gV.deceleration))
 
                 else:
-                    print("length of vehicle array:", len(self.vehicleArray))
                     # check for pre-existing cars within same lane to stop cars spawning on-top of each other
                     vehicleFound = False
-                    for vehicleObject in self.vehicleArray:
-                        if (vehicleObject.lane == i) and (-40 < vehicleObject.x < (0 + vehicleObject.size[0])):
+                    for vehicleObject in self.carsInLane(i):
+                        if -40 <= vehicleObject.x <= (0 + vehicleObject.size[0]):
                             vehicleFound = True
 
                     if vehicleFound:
-                        print("Error generating car car already in lane")
+                        pass
+                        # print("Error generating car car already in lane")
 
                     else:
                         self.vehicleArray.append(vehicle.Vehicle(road=self, size=(40, 30), lane=i, x=-40,
