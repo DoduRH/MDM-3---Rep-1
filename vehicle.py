@@ -96,22 +96,26 @@ class Vehicle:
             closestHazard = min(hazards, key=lambda k: k.x-self.x)
             hazardDistance = closestHazard.x - (self.x + self.size[0])
             if hazardDistance < self.stoppingDistance:
-                # Break maximally for the closest 30% of the stopping distance
-                self.acceleration = self.maxDeceleration/(hazardDistance/(self.stoppingDistance*0.3))
-                if self.acceleration <= self.maxDeceleration:
-                    self.acceleration = self.maxDeceleration
+                if isinstance(closestHazard, Vehicle):
+                    if self.velocity <= closestHazard.velocity:
+                        self.acceleration = self.maxAcceleration
+                    else:
+                        # Break maximally for the closest 30% of the stopping distance
+                        self.acceleration = self.maxDeceleration / (hazardDistance / (self.stoppingDistance * 0.3))
+                        if self.acceleration <= self.maxDeceleration:
+                            self.acceleration = self.maxDeceleration
+
+                else:
+                    # Break maximally for the closest 30% of the stopping distance
+                    self.acceleration = self.maxDeceleration/(hazardDistance/(self.stoppingDistance*0.3))
+                    if self.acceleration <= self.maxDeceleration:
+                        self.acceleration = self.maxDeceleration
 
             changed = False
             # Try changing left and right
             changed = self.safeLaneChange(-1)
             if not changed:
-                changed = self.safeLaneChange(1)
-            # Otherwise decelerate
-            if not changed:
-                # Break maximally for the closest 30% of the stopping distance
-                self.acceleration = self.maxDeceleration/(hazardDistance/(self.stoppingDistance*0.3))
-                if self.acceleration <= self.maxDeceleration:
-                    self.acceleration = self.maxDeceleration
+                self.safeLaneChange(1)
 
         else:
             self.acceleration = self.maxAcceleration

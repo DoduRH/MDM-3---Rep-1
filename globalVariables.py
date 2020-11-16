@@ -20,6 +20,7 @@ roadSpeedLimit = 100
 # Mean cars arriving every 1 seconds (page 8 https://rosap.ntl.bts.gov/view/dot/16299/dot_16299_DS1.html)
 # arrivalRate = [0.001, 0.06166666666666667, 0.06166666666666667]
 arrivalRate = [0.02, 0.02, 0.02]
+
 laneCount = 3
 
 acceleration = 3 # need a good source of 'normal' acceleration on motorway

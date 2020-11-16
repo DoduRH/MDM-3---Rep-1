@@ -70,7 +70,7 @@ class Road:
         else:
             avgVelocity = 0
 
-        self.laneFlowRates[lane] += avgVelocity
+        self.laneFlowRates[lane] = avgVelocity
 
     def newCarIndex(self):
         self.currentCarIndex += 1
