@@ -1,7 +1,7 @@
 # A lovely home for all our global variables
 
 # pygame variables
-displaySize = (1000, 600)
+displaySize = (1400, 600)
 fps = 60
 deltaTime = 0
 runTimer = 0
@@ -19,7 +19,8 @@ roadWidth = 40
 roadSpeedLimit = 100
 # Mean cars arriving every 1 seconds (page 8 https://rosap.ntl.bts.gov/view/dot/16299/dot_16299_DS1.html)
 # arrivalRate = [0.001, 0.06166666666666667, 0.06166666666666667]
-arrivalRate = [0.02, 0.02, 0.02]
+# arrivalRate = [0.02, 0.02, 0.02]
+arrivalRate = [0.2, 0.2, 0.2]
 
 laneCount = 3
 

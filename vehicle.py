@@ -159,7 +159,9 @@ class Vehicle:
     # check the flow rates of all lanes. If one is higher than current lane change to lane with higher flow rate
     def checkLaneFlowRates(self, road):
         for lane in range(road.laneCount):
-            if road.laneFlowRates[lane] > road.laneFlowRates[self.lane]:
+            if ((road.laneFlowRates[lane] > road.laneFlowRates[self.lane]) and
+                    (len(road.carsInLane(lane)) < len(road.carsInLane(self.lane)))):
+
                 if lane > self.lane:
                     self.safeLaneChange(1)
 
