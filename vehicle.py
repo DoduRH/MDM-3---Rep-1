@@ -18,7 +18,7 @@ class Vehicle:
         self.maxDeceleration = deceleration
         self.speedLimit = speedLimit
         self.velocity = self.speedLimit
-        self.colour = (128, 128, 0)
+        self.colour = [(self.speedLimit - self.velocity)/self.speedLimit * 200, self.velocity/self.speedLimit * 200, 0]
         self.crashed = False
         self.stoppingDistance = ((((1+(0.05*((((self.velocity/0.225)/1000)*(60**2))/1.6)))*((((self.velocity/0.225)/1000)*(60**2))/1.6))/3)*0.225)+(4*4.4444)
         self.changingLane = False
