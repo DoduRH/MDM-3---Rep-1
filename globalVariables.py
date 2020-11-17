@@ -27,9 +27,21 @@ acceleration = 4 # need a good source of 'normal' acceleration on motorway
 deceleration = -10 # https://copradar.com/chapts/references/acceleration.html#:~:text=Many%20safety%20experts%20use%2015,maximum%20braking%20around%200.8%20g's.
 
 # Scale 1 metre = 4.44444 Pixels, 20 pixels = 4.5 metres (Need to scale this down in the future)
-maxSpeedDist = (137.77764, 9.934212288) # mean of 70 mph, std of 5 mph
-vehicleSizes = [20, 25, 80] # size of car, van, LGV
-vehicleStartingVelocity = 137.77764/4
+
+# ALL IN meters AND seconds
+maxSpeedDist = {
+    "car": (31.2928, 2.2352), # mean of 70 mph, std of 5 mph
+    "van": (31.2928, 2.2352),  
+    "LGV": (26.8224, 2.2352)  # mean of 70 mph, std of 5 mph
+}
+
+vehicleSizes = {
+    "car": 4.5,
+    "van": 8,
+    "LGV": 18
+}
+
+scale = 1 # How many pixels per meter, only affects length left to right
 
 # Collected Data
 vehicleCrossingTimes = []

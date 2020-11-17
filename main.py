@@ -45,16 +45,6 @@ def processData(crossingTimes, roadObject):
     print("--------------------------------------------------------------------------------------------------")
 
 
-# checks if a car already exists in the lane where a vehicle spawn has been requested to spawn
-# returns true if there is a car and false if it is safe to spawn car
-def carSpawnCheck(vehicleSize):
-    for vehicles in roadObject.vehicleArray:
-        if vehicles.lane == int(event.unicode) and vehicles.x < 100:
-            return True
-
-    return False
-
-
 # Main loop flag
 simQuit = False
 
@@ -92,29 +82,7 @@ while not simQuit:
 
             # Add cars in specific lanes on number pressed
             if event.unicode.isnumeric() and int(event.unicode) < gV.laneCount:
-                randVehicleSizeSelector = np.random.randint(0, 3)
-                if randVehicleSizeSelector == 2:
-                    gV.maxSpeedDist = (99.34212288, 9.934212288)
-                else:
-                    gV.maxSpeedDist = (137.77764, 9.934212288)
-                randVehicleSize = gV.vehicleSizes[randVehicleSizeSelector]
-                if len(roadObject.vehicleArray) == 0:
-                    roadObject.vehicleArray.append(
-                        vehicle.Vehicle(road=roadObject, vehicleLength=randVehicleSize, lane=int(event.unicode), x=-randVehicleSize,
-                                        speedLimit=np.random.normal(*gV.maxSpeedDist),
-                                        acceleration=gV.acceleration,
-                                        deceleration=gV.deceleration))
-
-                else:
-                    if carSpawnCheck(randVehicleSize):
-                        pass
-                        # print("Error spawning car")
-                    else:
-                        roadObject.vehicleArray.append(
-                            vehicle.Vehicle(road=roadObject, vehicleLength=randVehicleSize, lane=int(event.unicode), x=-randVehicleSize,
-                                            speedLimit=np.random.normal(*gV.maxSpeedDist),
-                                            acceleration=gV.acceleration,
-                                            deceleration=gV.deceleration))
+                roadObject.spawnVehicle(lane=int(event.unicode))
 
     # generate traffic coming down road frequency dependent on poisson distribution
     if round(gV.runTimer, 1) % 1 == 0:
@@ -146,4 +114,3 @@ while not simQuit:
 
 
 pg.quit()
-quit()
