@@ -19,13 +19,15 @@ class Road:
         self.vehicleArray = []
         self.obstructionArray = []
         self.currentCarIndex = -1
-        self.font = pg.font.SysFont('Comic Sans MS', round(laneWidth - laneWidth*0.25))
+        self.font = pg.font.SysFont('Comic Sans MS', round(laneWidth - laneWidth * 0.25))
 
     def draw(self, display):
         for i in range(self.laneCount):
-            pg.draw.rect(display, gV.grey, [self.pos[0], self.pos[1] + self.laneWidth * i * 1.05, gV.displaySize[0], self.laneWidth])
+            pg.draw.rect(display, gV.grey,
+                         [self.pos[0], self.pos[1] + self.laneWidth * i * 1.05, gV.displaySize[0], self.laneWidth])
 
-    def spawnVehicle(self, vehicleType=None, lane=None, x=None, speedLimit=None, acceleration=None, deceleration=None, checkSpawn=True):
+    def spawnVehicle(self, vehicleType=None, lane=None, x=None, speedLimit=None, acceleration=None, deceleration=None,
+                     checkSpawn=True):
         '''
             Spawns a vehicle, uses global variables if parameters are None
         '''
@@ -34,19 +36,19 @@ class Road:
         vehicleSize = gV.vehicleSizes[vehicleType]
 
         if lane is None:
-            lane = np.random.randint(0, self.laneCount-1)
-        
+            lane = np.random.randint(0, self.laneCount - 1)
+
         if x is None:
             x = -vehicleSize
-        
+
         if speedLimit is None:
             speedLimit = np.random.normal(*gV.maxSpeedDist[vehicleType])
-        
+
         if acceleration is None:
-            acceleration=gV.acceleration
-        
+            acceleration = gV.acceleration
+
         if deceleration is None:
-            deceleration=gV.deceleration
+            deceleration = gV.deceleration
 
         if checkSpawn:
             if self.carSpawnCheck(lane):
@@ -57,7 +59,6 @@ class Road:
                             speedLimit=speedLimit,
                             acceleration=acceleration,
                             deceleration=deceleration))
-
 
     def generateTraffic(self):
         for i in range(self.laneCount):
@@ -94,7 +95,7 @@ class Road:
             totalVelocity += vehicleObject.velocity
 
         if len(vehiclesInLane) != 0:
-            avgVelocity = totalVelocity/len(vehiclesInLane)
+            avgVelocity = totalVelocity / len(vehiclesInLane)
 
         else:
             avgVelocity = 0

@@ -29,7 +29,7 @@ deceleration = -10 # https://copradar.com/chapts/references/acceleration.html#:~
 # ALL IN meters AND seconds
 maxSpeedDist = {
     "car": (31.2928, 2.2352), # mean of 70 mph, std of 5 mph
-    "van": (31.2928, 2.2352),  
+    "van": (31.2928, 2.2352),
     "LGV": (26.8224, 2.2352)  # mean of 60 mph, std of 5 mph
 }
 

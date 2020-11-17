@@ -120,7 +120,7 @@ class Vehicle:
 
         else:
             self.acceleration = self.maxAcceleration
-            self.checkLaneFlowRates(road)
+            # self.checkLaneFlowRates(road)
 
     # If the vehicle hits something then it has crashed and this function is called
     def crashed(self):

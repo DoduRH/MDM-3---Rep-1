@@ -9,7 +9,6 @@ import matplotlib as plt
 import globalVariables as gV
 from random import choice
 
-
 # initialise pygame
 pg.init()
 timer_font = pg.font.SysFont('Comic Sans MS', 30)
@@ -18,12 +17,11 @@ simDisplay = pg.display.set_mode(gV.displaySize)
 pg.display.set_caption('Highways England Connected Vehicle Simulation Environment')
 clock = pg.time.Clock()
 
-gV.deltaTime = 1/gV.fps
+gV.deltaTime = 1 / gV.fps
 
 
 # define functions here
 def processData(crossingTimes, roadObject):
-
     avgTime = 0
     for t in crossingTimes:
         avgTime += t
@@ -35,16 +33,15 @@ def processData(crossingTimes, roadObject):
         totalVelocity += vehicleObject.velocity
 
     if len(roadObject.vehicleArray) != 0:
-        avgVelocity = totalVelocity/len(roadObject.vehicleArray)
+        avgVelocity = totalVelocity / len(roadObject.vehicleArray)
 
     else:
         avgVelocity = 0
 
-
     print("\nStats\n--------------------------------------------------------------------------------------------------")
     print("Average time taken for 1 vehicle to cross road:", avgTime, "s")
     if avgTime != 0:
-        print("Vehicles per second:", 1/avgTime)
+        print("Vehicles per second:", 1 / avgTime)
 
     print("Average velocity of each lane at end of simulation:", roadObject.laneFlowRates)
     print("Average velocity of all lanes at end of simulation:", avgVelocity)
@@ -55,10 +52,11 @@ def processData(crossingTimes, roadObject):
 simQuit = False
 
 # Create Objects for simulation
-roadObject = road.Road(pos=[0, (gV.displaySize[1]/2)-gV.roadWidth/2], laneCount=gV.laneCount, laneWidth=gV.roadWidth, meanArrivalRate=gV.arrivalRate)
+roadObject = road.Road(pos=[0, (gV.displaySize[1] / 2) - gV.roadWidth / 2], laneCount=gV.laneCount,
+                       laneWidth=gV.roadWidth, meanArrivalRate=gV.arrivalRate)
 
 # Add obstacle
-roadObject.obstructionArray.append(obstacle.Obstacle(road=roadObject, x=(gV.displaySize[0] / gV.scale)/1.5, lane=0))
+roadObject.obstructionArray.append(obstacle.Obstacle(road=roadObject, x=(gV.displaySize[0] / gV.scale) / 1.5, lane=0))
 # roadObject.obstructionArray.append(obstacle.Obstacle(road=roadObject, x=gV.displaySize[0]/1.5, lane=1))
 print("Obstacle position is", roadObject.obstructionArray[0].x)
 # Record the starting time of simulation
@@ -82,7 +80,7 @@ while not simQuit:
             if len(roadObject.vehicleArray) >= 1:
                 if event.key == pg.K_LEFT:
                     choice(roadObject.vehicleArray).safeLaneChange(-1)
-                    
+
                 if event.key == pg.K_RIGHT:
                     choice(roadObject.vehicleArray).safeLaneChange(1)
 
@@ -122,6 +120,5 @@ while not simQuit:
     simDisplay.blit(timer_surface, (5, 0))
 
     pg.display.update()
-
 
 pg.quit()
