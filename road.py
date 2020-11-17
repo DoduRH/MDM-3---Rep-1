@@ -19,7 +19,7 @@ class Road:
         self.vehicleArray = []
         self.obstructionArray = []
         self.currentCarIndex = -1
-        self.font = pg.font.SysFont('Comic Sans MS', 30)
+        self.font = pg.font.SysFont('Comic Sans MS', round(laneWidth - laneWidth*0.25))
 
     def draw(self, display):
         for i in range(self.laneCount):
@@ -28,18 +28,24 @@ class Road:
     def generateTraffic(self):
         for i in range(self.laneCount):
             for _ in range(0, np.random.poisson(self.meanArrivalRate[i])):
-
+                randVehicleSizeSelector = np.random.randint(0, 3)
+                randVehicleSize = gV.vehicleSizes[randVehicleSizeSelector]
+                if randVehicleSizeSelector == 2:
+                    gV.maxSpeedDist = (99.34212288, 9.934212288)
+                else:
+                    gV.maxSpeedDist = (137.77764, 9.934212288)
                 if len(self.vehicleArray) == 0:
-                    self.vehicleArray.append(vehicle.Vehicle(road=self, size=(40, 30), lane=i, x=-40,
-                                                             speedLimit=np.random.normal(*gV.maxSpeedDist), velocity=0,
-                                                             acceleration=gV.acceleration,
-                                                             deceleration=gV.deceleration))
+                    self.vehicleArray.append(
+                        vehicle.Vehicle(road=self, vehicleLength=randVehicleSize, lane=i, x=-randVehicleSize,
+                                        speedLimit=np.random.normal(*gV.maxSpeedDist),
+                                        acceleration=gV.acceleration,
+                                        deceleration=gV.deceleration))
 
                 else:
                     # check for pre-existing cars within same lane to stop cars spawning on-top of each other
                     vehicleFound = False
                     for vehicleObject in self.carsInLane(i):
-                        if -40 <= vehicleObject.x <= (0 + vehicleObject.size[0]):
+                        if vehicleObject.x < 100:
                             vehicleFound = True
 
                     if vehicleFound:
@@ -47,15 +53,18 @@ class Road:
                         # print("Error generating car car already in lane")
 
                     else:
-                        self.vehicleArray.append(vehicle.Vehicle(road=self, size=(40, 30), lane=i, x=-40,
-                                                                 speedLimit=np.random.normal(*gV.maxSpeedDist),
-                                                                 velocity=0,
-                                                                 acceleration=gV.acceleration,
-                                                                 deceleration=gV.deceleration))
+                        self.vehicleArray.append(
+                            vehicle.Vehicle(road=self, vehicleLength=randVehicleSize, lane=i, x=-randVehicleSize,
+                                            speedLimit=np.random.normal(*gV.maxSpeedDist),
+                                            acceleration=gV.acceleration,
+                                            deceleration=gV.deceleration))
 
     # Returns list of cars in specified lane
     def carsInLane(self, lane):
         return [x for x in self.vehicleArray if x.lane == lane or x.oldLane == lane]
+
+    def obstaclesInLane(self, lane):
+        return [x for x in self.obstructionArray if x.lane == lane]
 
     # returns the average velocity of vehicles in a lane
     def calcLaneFlowRate(self, lane):

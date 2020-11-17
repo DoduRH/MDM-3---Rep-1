@@ -9,18 +9,18 @@ import time
 class Vehicle:
 
     # road (Road), size = (width, length) (tuple), lane (int), x (float), velocity = xVel (float), acceleration = xAcc (float)
-    def __init__(self, road, size, lane, x, speedLimit, velocity, acceleration, deceleration):
+    def __init__(self, road, vehicleLength, lane, x, speedLimit, acceleration, deceleration):
         self.road = road
         self.x = x
-        self.size = size
+        self.size = (vehicleLength, road.laneWidth - road.laneWidth*0.25)
         self.lane = lane
-        self.velocity = velocity
+        self.velocity = gV.vehicleStartingVelocity
         self.maxAcceleration = acceleration
         self.maxDeceleration = deceleration
         self.speedLimit = speedLimit
         self.colour = (128, 128, 0)
         self.crashed = False
-        self.stoppingDistance = speedLimit * 3
+        self.stoppingDistance = ((((1+(0.05*((((self.velocity/0.225)/1000)*(60**2))/1.6)))*((((self.velocity/0.225)/1000)*(60**2))/1.6))/3)*0.225)+(4*4.4444)
         self.changingLane = False
         self.oldLane = -1
         self.acceleration = 0
@@ -43,13 +43,14 @@ class Vehicle:
             else:
                 self.changingProgress += 1
         else:
-            pg.draw.rect(display, self.colour, [self.x, self.road.pos[1] + self.road.laneWidth * self.lane * 1.05 + 5, self.size[0], self.size[1]])
+            pg.draw.rect(display, self.colour, [self.x, self.road.pos[1] + self.road.laneWidth * self.lane * 1.05 + 3, self.size[0], self.size[1]])
             display.blit(text, [self.x + self.size[0]/2 - text.get_rect().width/2, self.road.pos[1] + self.road.laneWidth * self.lane * 1.05 - 2])
         # Visualise the vehicle's stopping distance
         # pg.draw.rect(display, gV.blue, [self.x+(self.size[0]), self.road.pos[1] + self.road.laneWidth * self.lane * 1.05 + 5, self.stoppingDistance, self.size[1]])
 
     # move vehicle up to max speed then stop
     def move(self):
+        self.stoppingDistance = ((((1+(0.05*((((self.velocity/0.225)/1000)*(60**2))/1.6)))*((((self.velocity/0.225)/1000)*(60**2))/1.6))/3)*0.225)+(4*4.4444)
         if (self.velocity + self.acceleration) <= self.speedLimit:
             self.velocity += self.acceleration * gV.deltaTime
             if self.velocity < 0:
@@ -140,9 +141,22 @@ class Vehicle:
 
         # Check lane is not obstructed by another car
         newLaneTraffic = self.road.carsInLane(targetLane)
-        for car in newLaneTraffic:
-            if math.isclose(car.x, self.x, abs_tol=120): # Should take relative speed into account
+        for vehicleObject in newLaneTraffic:
+            # Should take relative speed into account
+            if (vehicleObject.x + vehicleObject.size[0] + vehicleObject.stoppingDistance < self.x or
+               vehicleObject.x < self.x < vehicleObject.x + vehicleObject.size[0] or
+               self.x < vehicleObject.x < self.x + self.size[0]):
+
                 # self.log("lane change failed - car too close")
+                return False
+
+        newLaneObstacles = self.road.obstaclesInLane(targetLane)
+        for obstacle in newLaneObstacles:
+            if (math.isclose(obstacle.x, self.x + self.size[0], abs_tol=self.stoppingDistance) or
+               obstacle.x < self.x < obstacle.x + obstacle.size[0] or
+               self.x < obstacle.x < self.x + self.size[0]):
+
+                # self.log("lane change failed - obstacle too close")
                 return False
 
         self.changeLane(direction)

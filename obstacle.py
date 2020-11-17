@@ -5,11 +5,11 @@ import globalVariables as gV
 
 class Obstacle:
 
-    def __init__(self, road, x, lane, size):
+    def __init__(self, road, x, lane):
         self.x = x
         self.lane = lane
-        self.size = size
         self.road = road
+        self.size = (40, self.road.laneWidth)
 
     # Draws the obstacle to display
     def draw(self, display):
