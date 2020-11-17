@@ -39,7 +39,7 @@ vehicleSizes = {
     "LGV": 18
 }
 
-scale = 1 # How many pixels per meter, only affects length left to right
+scale = 0.5 # How many pixels per meter, only affects length left to right
 
 # Collected Data
 vehicleCrossingTimes = []

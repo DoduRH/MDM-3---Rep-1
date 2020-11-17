@@ -13,6 +13,7 @@ from random import choice
 # initialise pygame
 pg.init()
 timer_font = pg.font.SysFont('Comic Sans MS', 30)
+distance_font = pg.font.SysFont('Comic Sans MS', 10)
 simDisplay = pg.display.set_mode(gV.displaySize)
 pg.display.set_caption('Highways England Connected Vehicle Simulation Environment')
 clock = pg.time.Clock()
@@ -51,9 +52,9 @@ simQuit = False
 roadObject = road.Road(pos=[0, (gV.displaySize[1]/2)-gV.roadWidth/2], laneCount=gV.laneCount, laneWidth=gV.roadWidth, meanArrivalRate=gV.arrivalRate)
 
 # Add obstacle
-roadObject.obstructionArray.append(obstacle.Obstacle(road=roadObject, x=gV.displaySize[0]/1.5, lane=0))
+roadObject.obstructionArray.append(obstacle.Obstacle(road=roadObject, x=(gV.displaySize[0] / gV.scale)/1.5, lane=0))
 # roadObject.obstructionArray.append(obstacle.Obstacle(road=roadObject, x=gV.displaySize[0]/1.5, lane=1))
-
+print("Obstacle position is", roadObject.obstructionArray[0].x)
 # Record the starting time of simulation
 runningTime = 0
 # Main loop
@@ -104,6 +105,11 @@ while not simQuit:
     # obstruction handling loop
     for obstacleObject in roadObject.obstructionArray:
         obstacleObject.draw(simDisplay)
+
+    # 100 meter markers
+    for i in range(0, int(gV.displaySize[0] / gV.scale), 100):
+        surf = distance_font.render(str(i), False, gV.black)
+        simDisplay.blit(surf, (i * gV.scale, 100))
 
     # Draw time to the display
     timer_surface = timer_font.render(str(round(gV.runTimer, 3)), False, gV.black)

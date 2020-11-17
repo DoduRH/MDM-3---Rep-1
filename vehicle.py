@@ -34,16 +34,16 @@ class Vehicle:
         text = self.road.font.render(str(self.number), False, (0, 0, 0))
         if self.changingLane:
             y = self.road.laneWidth * 1.05 * self.oldLane + (self.lane - self.oldLane) * self.road.laneWidth * 1.05 * self.changingProgress/self.changingTime
-            pg.draw.rect(display, self.colour, [self.x, self.road.pos[1] + 5 + y, self.size[0], self.size[1]])
-            display.blit(text, [self.x + self.size[0]/2 - text.get_rect().width/2, self.road.pos[1] - 2 + y])
+            pg.draw.rect(display, self.colour, [self.x * gV.scale, self.road.pos[1] + 5 + y, self.size[0] * gV.scale, self.size[1]])
+            display.blit(text, [(self.x + self.size[0]/2 - text.get_rect().width/2) * gV.scale, self.road.pos[1] - 2 + y])
             if self.changingProgress == self.changingTime:
                 self.changingLane = False
                 self.oldLane = self.lane
             else:
                 self.changingProgress += 1
         else:
-            pg.draw.rect(display, self.colour, [self.x, self.road.pos[1] + self.road.laneWidth * self.lane * 1.05 + 3, self.size[0], self.size[1]])
-            display.blit(text, [self.x + self.size[0]/2 - text.get_rect().width/2, self.road.pos[1] + self.road.laneWidth * self.lane * 1.05 - 2])
+            pg.draw.rect(display, self.colour, [self.x * gV.scale, self.road.pos[1] + self.road.laneWidth * self.lane * 1.05 + 3, self.size[0] * gV.scale, self.size[1]])
+            display.blit(text, [(self.x + self.size[0]/2 - text.get_rect().width/2) * gV.scale, self.road.pos[1] + self.road.laneWidth * self.lane * 1.05 - 2])
         # Visualise the vehicle's stopping distance
         # pg.draw.rect(display, gV.blue, [self.x+(self.size[0]), self.road.pos[1] + self.road.laneWidth * self.lane * 1.05 + 5, self.stoppingDistance, self.size[1]])
 
