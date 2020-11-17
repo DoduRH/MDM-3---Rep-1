@@ -14,10 +14,10 @@ class Vehicle:
         self.x = x
         self.size = (vehicleLength, road.laneWidth - road.laneWidth*0.25)
         self.lane = lane
-        self.velocity = gV.vehicleStartingVelocity
         self.maxAcceleration = acceleration
         self.maxDeceleration = deceleration
         self.speedLimit = speedLimit
+        self.velocity = self.speedLimit
         self.colour = (128, 128, 0)
         self.crashed = False
         self.stoppingDistance = ((((1+(0.05*((((self.velocity/0.225)/1000)*(60**2))/1.6)))*((((self.velocity/0.225)/1000)*(60**2))/1.6))/3)*0.225)+(4*4.4444)
