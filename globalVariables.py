@@ -26,13 +26,11 @@ laneCount = 3
 acceleration = 4 # need a good source of 'normal' acceleration on motorway
 deceleration = -10 # https://copradar.com/chapts/references/acceleration.html#:~:text=Many%20safety%20experts%20use%2015,maximum%20braking%20around%200.8%20g's.
 
-# Scale 1 metre = 4.44444 Pixels, 20 pixels = 4.5 metres (Need to scale this down in the future)
-
 # ALL IN meters AND seconds
 maxSpeedDist = {
     "car": (31.2928, 2.2352), # mean of 70 mph, std of 5 mph
     "van": (31.2928, 2.2352),  
-    "LGV": (26.8224, 2.2352)  # mean of 70 mph, std of 5 mph
+    "LGV": (26.8224, 2.2352)  # mean of 60 mph, std of 5 mph
 }
 
 vehicleSizes = {
