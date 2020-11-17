@@ -22,7 +22,7 @@ gV.deltaTime = gV.fps/1000
 
 
 # define functions here
-def processData(crossingTimes, road):
+def processData(crossingTimes, roadObject):
 
     avgTime = 0
     for t in crossingTimes:
@@ -31,16 +31,16 @@ def processData(crossingTimes, road):
         avgTime /= len(crossingTimes)
 
     avgVelocity = 0
-    for lane in range(road.laneCount):
-        avgVelocity += road.laneFlowRates[lane]
-    avgVelocity /= road.laneCount
+    for lane in range(roadObject.laneCount):
+        avgVelocity += roadObject.laneFlowRates[lane]
+    avgVelocity /= roadObject.laneCount
 
     print("\nStats\n--------------------------------------------------------------------------------------------------")
     print("Average time taken for 1 vehicle to cross road:", avgTime, "s")
     if avgTime != 0:
         print("Vehicles per second:", 1/avgTime)
 
-    print("Average velocity of each lane:", road.laneFlowRates)
+    print("Average velocity of each lane:", roadObject.laneFlowRates)
     print("Average velocity of all lanes:", avgVelocity)
     print("--------------------------------------------------------------------------------------------------")
 
