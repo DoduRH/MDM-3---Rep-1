@@ -2,7 +2,7 @@
 
 # pygame variables
 displaySize = (1400, 600)
-fps = 60
+fps = 144
 deltaTime = 0
 runTimer = 0
 

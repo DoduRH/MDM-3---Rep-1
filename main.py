@@ -18,7 +18,7 @@ simDisplay = pg.display.set_mode(gV.displaySize)
 pg.display.set_caption('Highways England Connected Vehicle Simulation Environment')
 clock = pg.time.Clock()
 
-gV.deltaTime = gV.fps/1000
+gV.deltaTime = 1/gV.fps
 
 
 # define functions here
@@ -66,7 +66,7 @@ roadObject.obstructionArray.append(obstacle.Obstacle(road=roadObject, x=gV.displ
 # roadObject.obstructionArray.append(obstacle.Obstacle(road=roadObject, x=gV.displaySize[0]/1.5, lane=1))
 
 # Record the starting time of simulation
-startTime = time.time()
+runningTime = 0
 # Main loop
 while not simQuit:
     clock.tick(gV.fps)
@@ -139,7 +139,7 @@ while not simQuit:
         obstacleObject.draw(simDisplay)
 
     # Draw time to the display
-    timer_surface = timer_font.render(str(round(time.time() - startTime, 3)), False, gV.black)
+    timer_surface = timer_font.render(str(round(gV.runTimer, 3)), False, gV.black)
     simDisplay.blit(timer_surface, (5, 0))
 
     pg.display.update()

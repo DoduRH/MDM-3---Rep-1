@@ -27,7 +27,7 @@ class Vehicle:
         self.changingProgress = 0
         self.changingTime = 50
         self.number = road.newCarIndex()
-        self.spawnTime = time.time()
+        self.timeAlive = 0
 
     # draws everything to do with vehicle
     def draw(self, display):
@@ -58,11 +58,12 @@ class Vehicle:
             self.colour = [(self.speedLimit - self.velocity)/self.speedLimit * 200, self.velocity/self.speedLimit * 200, 0]
 
         self.x += self.velocity * gV.deltaTime
+        self.timeAlive += gV.deltaTime
 
         if self.x > gV.displaySize[0]:
             self.road.vehicleArray.remove(self)
             # return finish time
-            return time.time() - self.spawnTime
+            return self.timeAlive
 
         return
 
