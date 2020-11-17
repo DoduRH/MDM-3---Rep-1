@@ -59,7 +59,7 @@ class Vehicle:
         self.x += self.velocity * gV.deltaTime
         self.timeAlive += gV.deltaTime
 
-        if self.x > gV.displaySize[0]:
+        if self.x > gV.displaySize[0] / gV.scale:
             self.road.vehicleArray.remove(self)
             # return finish time
             return self.timeAlive

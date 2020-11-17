@@ -30,18 +30,24 @@ def processData(crossingTimes, roadObject):
     if len(crossingTimes) > 0:
         avgTime /= len(crossingTimes)
 
-    avgVelocity = 0
-    for lane in range(roadObject.laneCount):
-        avgVelocity += roadObject.laneFlowRates[lane]
-    avgVelocity /= roadObject.laneCount
+    totalVelocity = 0
+    for vehicleObject in roadObject.vehicleArray:
+        totalVelocity += vehicleObject.velocity
+
+    if len(roadObject.vehicleArray) != 0:
+        avgVelocity = totalVelocity/len(roadObject.vehicleArray)
+
+    else:
+        avgVelocity = 0
+
 
     print("\nStats\n--------------------------------------------------------------------------------------------------")
     print("Average time taken for 1 vehicle to cross road:", avgTime, "s")
     if avgTime != 0:
         print("Vehicles per second:", 1/avgTime)
 
-    print("Average velocity of each lane:", roadObject.laneFlowRates)
-    print("Average velocity of all lanes:", avgVelocity)
+    print("Average velocity of each lane at end of simulation:", roadObject.laneFlowRates)
+    print("Average velocity of all lanes at end of simulation:", avgVelocity)
     print("--------------------------------------------------------------------------------------------------")
 
 
