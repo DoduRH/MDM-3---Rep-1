@@ -3,7 +3,6 @@ import pygame as pg
 import vehicle
 import obstacle
 import road
-import time
 import numpy as np
 import pandas as pd
 import matplotlib as plt
