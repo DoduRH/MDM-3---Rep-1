@@ -54,7 +54,7 @@ class Vehicle:
                                 self.road.pos[1] + self.road.laneWidth * self.lane * 1.05 - 2])
         # Visualise the vehicle's stopping distance
         # pg.draw.rect(display, gV.green, [(self.x * gV.scale + self.size[0] * gV.scale),self.road.pos[1] + self.road.laneWidth * self.lane * 1.05 + 5, self.visionDistance * gV.scale, self.size[1]])
-        # pg.draw.rect(display, gV.blue, [(self.x*gV.scale+self.size[0] * gV.scale), self.road.pos[1] + self.road.laneWidth * self.lane * 1.05 + 5, self.stoppingDistance * gV.scale, self.size[1]])
+        pg.draw.rect(display, gV.blue, [(self.x*gV.scale+self.size[0] * gV.scale), self.road.pos[1] + self.road.laneWidth * self.lane * 1.05 + self.size[1] * 0.25, self.stoppingDistance * gV.scale, self.size[1] * 0.5])
 
     # move vehicle up to max speed then stop
     def move(self):
@@ -106,7 +106,7 @@ class Vehicle:
         if hazardFound:
             closestHazard = min(hazards, key=lambda k: k.x - self.x)
             hazardDistance = closestHazard.x - (self.x + self.size[0])
-            self.log("hazard distance:", hazardDistance)
+            # self.log("hazard distance:", hazardDistance)
             if hazardDistance <= self.stoppingDistance:
                 if isinstance(closestHazard, Vehicle):
                     # if the vehicle in front is traveling faster then accelerate to match speed
@@ -146,7 +146,7 @@ class Vehicle:
         # else their are no hazards ahead so change to non-overtaking lane
         else:
             self.acceleration = self.maxAcceleration
-            self.safeLaneChange(-1)
+            # self.safeLaneChange(-1)
             # if self.checkLaneFlowRates(road):
             #    pass
             # else:
@@ -173,11 +173,40 @@ class Vehicle:
         newLaneTraffic = self.road.carsInLane(targetLane)
         for vehicleObject in newLaneTraffic:
             # Should take relative speed into account
-            if ((vehicleObject.x + vehicleObject.size[0] + vehicleObject.stoppingDistance < self.x and self.x > vehicleObject.x) or
-                    (self.x + self.size[0] + self.stoppingDistance < vehicleObject.x and vehicleObject.x > self.x) or
-                    vehicleObject.x <= self.x < vehicleObject.x + vehicleObject.size[0] or
-                    self.x <= vehicleObject.x < self.x + self.size[0]):
-                # self.log("lane change failed - car too close")
+            selfFrontBumper = self.x + self.size[0]
+            selfBackBumper = self.x
+
+            otherFrontBumper = vehicleObject.x + vehicleObject.size[0]
+            otherBackBumper = vehicleObject.x
+
+            # self front bumper
+            if otherBackBumper < selfFrontBumper < otherFrontBumper:
+                # self.log("vehicle", vehicleObject.number, "blocking self front bumper")
+                return False
+
+            # self back bumper
+            if otherBackBumper < selfBackBumper < otherFrontBumper:
+                # self.log("vehicle", vehicleObject.number, "blocking self back bumper")
+                return False
+
+            # other front bumper
+            if selfBackBumper < otherFrontBumper < selfFrontBumper:
+                # self.log("vehicle", vehicleObject.number, "blocking other front bumper")
+                return False
+
+            # other back bumper
+            if selfBackBumper < otherBackBumper < selfFrontBumper:
+                # self.log("vehicle", vehicleObject.number, "blocking other back bumper")
+                return False
+
+            # self stopping distance - other back bumper between self front bumper and self sopped distance
+            if selfFrontBumper < otherBackBumper < selfFrontBumper + self.stoppingDistance:
+                # self.log("vehicle", vehicleObject.number, "blocking self breaking distance")
+                return False
+
+            # self stopping distance
+            if otherFrontBumper < selfBackBumper < otherFrontBumper + vehicleObject.stoppingDistance:
+                # self.log("vehicle", vehicleObject.number, "blocking other breaking distance")
                 return False
 
         newLaneObstacles = self.road.obstaclesInLane(targetLane)
