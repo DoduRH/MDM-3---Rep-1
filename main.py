@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 import matplotlib as plt
 import globalVariables as gV
-from random import choice
+from random import choice, randint
 
 # initialise pygame
 pg.init()
@@ -19,6 +19,10 @@ clock = pg.time.Clock()
 
 gV.deltaTime = 1 / gV.fps
 
+if gV.seed is None:
+    gV.seed = randint(0, 100000)
+
+np.random.seed(gV.seed)
 
 # define functions here
 def processData(crossingTimes, roadObject):
@@ -39,6 +43,7 @@ def processData(crossingTimes, roadObject):
         avgVelocity = 0
 
     print("\nStats\n--------------------------------------------------------------------------------------------------")
+    print("Seed is", gV.seed)
     print("Average time taken for 1 vehicle to cross road:", avgTime, "s")
     if avgTime != 0:
         print("Vehicles per second:", 1 / avgTime)

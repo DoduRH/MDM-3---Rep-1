@@ -41,5 +41,8 @@ vehicleSizes = {
 
 scale = 3 # How many pixels per meter, only affects length left to right
 
+# Seeding numpy to give reproducible results, set to None to generate a seed
+seed = None 
+
 # Collected Data
 vehicleCrossingTimes = []
