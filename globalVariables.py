@@ -19,7 +19,7 @@ roadWidth = 20
 # Mean cars arriving every 1 seconds (page 8 https://rosap.ntl.bts.gov/view/dot/16299/dot_16299_DS1.html)
 # arrivalRate = [0.001, 0.06166666666666667, 0.06166666666666667]
 arrivalRate = [0.02, 0.02, 0.02]
-# arrivalRate = [0.2, 0.2, 0.2]
+#arrivalRate = [0, 0, 0]
 
 laneCount = 3
 
@@ -39,7 +39,7 @@ vehicleSizes = {
     "LGV": 18
 }
 
-scale = 0.5 # How many pixels per meter, only affects length left to right
+scale = 3 # How many pixels per meter, only affects length left to right
 
 # Collected Data
 vehicleCrossingTimes = []

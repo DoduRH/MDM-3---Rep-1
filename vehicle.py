@@ -11,15 +11,17 @@ class Vehicle:
     def __init__(self, road, vehicleLength, lane, x, speedLimit, acceleration, deceleration):
         self.road = road
         self.x = x
-        self.size = (vehicleLength, road.laneWidth - road.laneWidth*0.25)
+        self.size = (vehicleLength, road.laneWidth - road.laneWidth * 0.25)
         self.lane = lane
         self.maxAcceleration = acceleration
         self.maxDeceleration = deceleration
         self.speedLimit = speedLimit
         self.velocity = self.speedLimit
-        self.colour = [(self.speedLimit - self.velocity)/self.speedLimit * 200, self.velocity/self.speedLimit * 200, 0]
+        self.colour = [(self.speedLimit - self.velocity) / self.speedLimit * 200, self.velocity / self.speedLimit * 200,
+                       0]
         self.crashed = False
-        self.stoppingDistance = ((((1+(0.05*((((self.velocity/0.225)/1000)*(60**2))/1.6)))*((((self.velocity/0.225)/1000)*(60**2))/1.6))/3)*0.225)+(4*4.4444)
+        self.stoppingDistance = ((1250/4101 + (125/8202 * self.velocity * 2.23694)) * (self.velocity * 2.23694)) + 3
+        self.visionDistance = ((1250/4101 + (125/8202 * self.speedLimit * 2.23694)) * (self.speedLimit * 2.23694)) + 3
         self.changingLane = False
         self.oldLane = -1
         self.acceleration = 0
@@ -33,28 +35,36 @@ class Vehicle:
         # Draw car itself
         text = self.road.font.render(str(self.number), False, (0, 0, 0))
         if self.changingLane:
-            y = self.road.laneWidth * 1.05 * self.oldLane + (self.lane - self.oldLane) * self.road.laneWidth * 1.05 * self.changingProgress/self.changingTime
-            pg.draw.rect(display, self.colour, [self.x * gV.scale, self.road.pos[1] + 5 + y, self.size[0] * gV.scale, self.size[1]])
-            display.blit(text, [self.x * gV.scale + self.size[0] * gV.scale/2 - text.get_rect().width/2, self.road.pos[1] - 2 + y])
+            y = self.road.laneWidth * 1.05 * self.oldLane + (
+                    self.lane - self.oldLane) * self.road.laneWidth * 1.05 * self.changingProgress / self.changingTime
+            pg.draw.rect(display, self.colour,
+                         [self.x * gV.scale, self.road.pos[1] + 5 + y, self.size[0] * gV.scale, self.size[1]])
+            display.blit(text, [self.x * gV.scale + self.size[0] * gV.scale / 2 - text.get_rect().width / 2,
+                                self.road.pos[1] - 2 + y])
             if self.changingProgress == self.changingTime:
                 self.changingLane = False
                 self.oldLane = self.lane
             else:
                 self.changingProgress += 1
         else:
-            pg.draw.rect(display, self.colour, [self.x * gV.scale, self.road.pos[1] + self.road.laneWidth * self.lane * 1.05 + 3, self.size[0] * gV.scale, self.size[1]])
-            display.blit(text, [self.x * gV.scale + self.size[0] * gV.scale/2 - text.get_rect().width/2, self.road.pos[1] + self.road.laneWidth * self.lane * 1.05 - 2])
+            pg.draw.rect(display, self.colour,
+                         [self.x * gV.scale, self.road.pos[1] + self.road.laneWidth * self.lane * 1.05 + 3,
+                          self.size[0] * gV.scale, self.size[1]])
+            display.blit(text, [self.x * gV.scale + self.size[0] * gV.scale / 2 - text.get_rect().width / 2,
+                                self.road.pos[1] + self.road.laneWidth * self.lane * 1.05 - 2])
         # Visualise the vehicle's stopping distance
-        # pg.draw.rect(display, gV.blue, [self.x+(self.size[0]), self.road.pos[1] + self.road.laneWidth * self.lane * 1.05 + 5, self.stoppingDistance, self.size[1]])
+        # pg.draw.rect(display, gV.green, [(self.x * gV.scale + self.size[0] * gV.scale),self.road.pos[1] + self.road.laneWidth * self.lane * 1.05 + 5, self.visionDistance * gV.scale, self.size[1]])
+        # pg.draw.rect(display, gV.blue, [(self.x*gV.scale+self.size[0] * gV.scale), self.road.pos[1] + self.road.laneWidth * self.lane * 1.05 + 5, self.stoppingDistance * gV.scale, self.size[1]])
 
     # move vehicle up to max speed then stop
     def move(self):
-        self.stoppingDistance = ((((1+(0.05*((((self.velocity/0.225)/1000)*(60**2))/1.6)))*((((self.velocity/0.225)/1000)*(60**2))/1.6))/3)*0.225)+(4*4.4444)
+        self.stoppingDistance = ((1250/4101 + (125/8202 * self.velocity * 2.23694)) * (self.velocity * 2.23694)) + 3
         if (self.velocity + self.acceleration) <= self.speedLimit:
             self.velocity += self.acceleration * gV.deltaTime
             if self.velocity < 0:
                 self.velocity = 0
-            self.colour = [(self.speedLimit - self.velocity)/self.speedLimit * 200, self.velocity/self.speedLimit * 200, 0]
+            self.colour = [(self.speedLimit - self.velocity) / self.speedLimit * 200,
+                           self.velocity / self.speedLimit * 200, 0]
 
         self.x += self.velocity * gV.deltaTime
         self.timeAlive += gV.deltaTime
@@ -78,7 +88,7 @@ class Vehicle:
         # if an obstacle is within safe stopping distance then stop
         for obstacle in obstaclesArray:
             # Check it is in front, within 'range' and in same lane as self
-            if self.x + self.size[0] < obstacle.x < self.x + self.size[0] + self.stoppingDistance and obstacle.lane == self.lane:
+            if self.x < obstacle.x < self.x + self.size[0] + self.visionDistance and obstacle.lane == self.lane:
                 hazardFound = True
                 hazards.append(obstacle)
 
@@ -88,39 +98,59 @@ class Vehicle:
             if self == otherVehicle:
                 pass
 
-            elif self.x < otherVehicle.x < self.x + self.size[0] + self.stoppingDistance:
+            elif self.x < otherVehicle.x < self.x + self.size[0] + self.visionDistance:
                 hazardFound = True
                 hazards.append(otherVehicle)
 
         # If hazards are found then find the closest one and act accordingly
         if hazardFound:
-            closestHazard = min(hazards, key=lambda k: k.x-self.x)
+            closestHazard = min(hazards, key=lambda k: k.x - self.x)
             hazardDistance = closestHazard.x - (self.x + self.size[0])
-            if hazardDistance < self.stoppingDistance:
+            self.log("hazard distance:", hazardDistance)
+            if hazardDistance <= self.stoppingDistance:
                 if isinstance(closestHazard, Vehicle):
-                    if self.velocity <= closestHazard.velocity:
+                    # if the vehicle in front is traveling faster then accelerate to match speed
+                    if self.velocity < closestHazard.velocity and self.x + self.size[0] + 14 < closestHazard.x:
                         self.acceleration = self.maxAcceleration
+
+                    # if travelling faster than vehicle in front then try and overtake
+                    elif self.velocity >= closestHazard.velocity and self.x + self.size[0] + 14 > closestHazard.x:
+                        changed = self.safeLaneChange(1)
+                        if not changed:
+                            # Break maximally for the closest 30% of the stopping distance
+                            self.acceleration = self.maxDeceleration / (hazardDistance / (self.stoppingDistance * 1))
+                            if self.acceleration <= self.maxDeceleration:
+                                self.acceleration = self.maxDeceleration
+
+                    # if you need to break due to a vehicle start breaking and look to overtake using outside lane
                     else:
                         # Break maximally for the closest 30% of the stopping distance
-                        self.acceleration = self.maxDeceleration / (hazardDistance / (self.stoppingDistance * 0.3))
+                        self.acceleration = self.maxDeceleration / (hazardDistance / (self.stoppingDistance * 1))
                         if self.acceleration <= self.maxDeceleration:
                             self.acceleration = self.maxDeceleration
 
                 else:
                     # Break maximally for the closest 30% of the stopping distance
-                    self.acceleration = self.maxDeceleration/(hazardDistance/(self.stoppingDistance*0.3))
+                    self.acceleration = self.maxDeceleration / (hazardDistance / (self.stoppingDistance * 1))
                     if self.acceleration <= self.maxDeceleration:
                         self.acceleration = self.maxDeceleration
 
-            changed = False
-            # Try changing left and right
-            changed = self.safeLaneChange(-1)
-            if not changed:
-                self.safeLaneChange(1)
+                    changed = self.safeLaneChange(1)
+                    if not changed:
+                        self.safeLaneChange(-1)
 
+            # if hazard is outside of stopping distance it is not a true hazard so accelerate
+            else:
+                self.acceleration = self.maxAcceleration
+
+        # else their are no hazards ahead so change to non-overtaking lane
         else:
             self.acceleration = self.maxAcceleration
-            # self.checkLaneFlowRates(road)
+            self.safeLaneChange(-1)
+            # if self.checkLaneFlowRates(road):
+            #    pass
+            # else:
+            #     self.safeLaneChange(-1)
 
     # If the vehicle hits something then it has crashed and this function is called
     def crashed(self):
@@ -143,19 +173,18 @@ class Vehicle:
         newLaneTraffic = self.road.carsInLane(targetLane)
         for vehicleObject in newLaneTraffic:
             # Should take relative speed into account
-            if (vehicleObject.x + vehicleObject.size[0] + vehicleObject.stoppingDistance < self.x or
-               vehicleObject.x < self.x < vehicleObject.x + vehicleObject.size[0] or
-               self.x < vehicleObject.x < self.x + self.size[0]):
-
+            if ((vehicleObject.x + vehicleObject.size[0] + vehicleObject.stoppingDistance < self.x and self.x > vehicleObject.x) or
+                    (self.x + self.size[0] + self.stoppingDistance < vehicleObject.x and vehicleObject.x > self.x) or
+                    vehicleObject.x <= self.x < vehicleObject.x + vehicleObject.size[0] or
+                    self.x <= vehicleObject.x < self.x + self.size[0]):
                 # self.log("lane change failed - car too close")
                 return False
 
         newLaneObstacles = self.road.obstaclesInLane(targetLane)
         for obstacle in newLaneObstacles:
             if (math.isclose(obstacle.x, self.x + self.size[0], abs_tol=self.stoppingDistance) or
-               obstacle.x < self.x < obstacle.x + obstacle.size[0] or
-               self.x < obstacle.x < self.x + self.size[0]):
-
+                    obstacle.x < self.x < obstacle.x + obstacle.size[0] or
+                    self.x < obstacle.x < self.x + self.size[0]):
                 # self.log("lane change failed - obstacle too close")
                 return False
 
@@ -172,15 +201,16 @@ class Vehicle:
 
     # check the flow rates of all lanes. If one is higher than current lane change to lane with higher flow rate
     def checkLaneFlowRates(self, road):
+        changed = False
         for lane in range(road.laneCount):
-            if ((road.laneFlowRates[lane] > road.laneFlowRates[self.lane]) and
-                    (len(road.carsInLane(lane)) < len(road.carsInLane(self.lane)))):
-
+            if road.laneFlowRates[lane] > road.laneFlowRates[self.lane]:
                 if lane > self.lane:
-                    self.safeLaneChange(1)
+                    changed = self.safeLaneChange(1)
 
                 else:
-                    self.safeLaneChange(-1)
+                    changed = self.safeLaneChange(-1)
+
+        return changed
 
     # Log message including car colour (could swap for id or equivalent)
     def log(self, *message):
