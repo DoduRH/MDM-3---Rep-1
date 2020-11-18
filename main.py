@@ -43,6 +43,7 @@ def processData(crossingTimes, roadObject):
         avgVelocity = 0
 
     print("\nStats\n--------------------------------------------------------------------------------------------------")
+    print("Simulation was run for", gV.runTimer, "seconds")
     print("Seed is", gV.seed)
     print("Average time taken for 1 vehicle to cross road:", avgTime, "s")
     if avgTime != 0:

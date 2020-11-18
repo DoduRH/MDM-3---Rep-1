@@ -54,7 +54,7 @@ class Vehicle:
                                 self.road.pos[1] + self.road.laneWidth * self.lane * 1.05 - 2])
         # Visualise the vehicle's stopping distance
         # pg.draw.rect(display, gV.green, [(self.x * gV.scale + self.size[0] * gV.scale),self.road.pos[1] + self.road.laneWidth * self.lane * 1.05 + 5, self.visionDistance * gV.scale, self.size[1]])
-        pg.draw.rect(display, gV.blue, [(self.x*gV.scale+self.size[0] * gV.scale), self.road.pos[1] + self.road.laneWidth * self.lane * 1.05 + self.size[1] * 0.25, self.stoppingDistance * gV.scale, self.size[1] * 0.5])
+        # pg.draw.rect(display, gV.blue, [(self.x*gV.scale+self.size[0] * gV.scale), self.road.pos[1] + self.road.laneWidth * self.lane * 1.05 + self.size[1] * 0.25, self.stoppingDistance * gV.scale, self.size[1] * 0.5])
 
     # move vehicle up to max speed then stop
     def move(self):
