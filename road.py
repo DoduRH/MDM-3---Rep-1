@@ -64,7 +64,7 @@ class Road:
         for i in range(self.laneCount):
             for _ in range(0, np.random.poisson(self.meanArrivalRate[i])):
                 if len(self.vehicleArray) == 0:
-                    self.spawnVehicle()
+                    self.spawnVehicle(lane=i)
 
                 else:
                     # check for pre-existing cars within same lane to stop cars spawning on-top of each other
@@ -78,7 +78,7 @@ class Road:
                         # print("Error generating car car already in lane")
 
                     else:
-                        self.spawnVehicle()
+                        self.spawnVehicle(lane=i)
 
     # Returns list of cars in specified lane
     def carsInLane(self, lane):

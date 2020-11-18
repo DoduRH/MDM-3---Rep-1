@@ -200,12 +200,12 @@ class Vehicle:
                 return False
 
             # self stopping distance - other back bumper between self front bumper and self sopped distance
-            if selfFrontBumper < otherBackBumper < selfFrontBumper + self.stoppingDistance:
+            if selfFrontBumper < otherBackBumper < selfFrontBumper + self.stoppingDistance and vehicleObject.velocity <= self.velocity:
                 # self.log("vehicle", vehicleObject.number, "blocking self breaking distance")
                 return False
 
             # self stopping distance
-            if otherFrontBumper < selfBackBumper < otherFrontBumper + vehicleObject.stoppingDistance:
+            if otherFrontBumper < selfBackBumper < otherFrontBumper + vehicleObject.stoppingDistance and vehicleObject.velocity >= self.velocity:
                 # self.log("vehicle", vehicleObject.number, "blocking other breaking distance")
                 return False
 
