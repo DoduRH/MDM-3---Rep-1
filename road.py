@@ -36,7 +36,7 @@ class Road:
         vehicleSize = gV.vehicleSizes[vehicleType]
 
         if lane is None:
-            lane = np.random.randint(0, self.laneCount - 1)
+            lane = np.random.randint(0, self.laneCount)
 
         if x is None:
             x = -vehicleSize
