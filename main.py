@@ -24,6 +24,7 @@ if gV.seed is None:
 
 np.random.seed(gV.seed)
 
+
 # define functions here
 def processData(crossingTimes, roadObject):
     avgTime = 0
