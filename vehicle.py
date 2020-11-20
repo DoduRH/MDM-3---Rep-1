@@ -146,7 +146,7 @@ class Vehicle:
         # else their are no hazards ahead so change to non-overtaking lane
         else:
             self.acceleration = self.maxAcceleration
-            # self.safeLaneChange(-1)
+            self.safeLaneChange(-1)
             # if self.checkLaneFlowRates(road):
             #    pass
             # else:
@@ -211,7 +211,7 @@ class Vehicle:
 
         newLaneObstacles = self.road.obstaclesInLane(targetLane)
         for obstacle in newLaneObstacles:
-            if (math.isclose(obstacle.x, self.x + self.size[0], abs_tol=self.stoppingDistance) or
+            if ((math.isclose(obstacle.x, self.x + self.size[0], abs_tol=self.stoppingDistance) and self.x < obstacle.x) or
                     obstacle.x < self.x < obstacle.x + obstacle.size[0] or
                     self.x < obstacle.x < self.x + self.size[0]):
                 # self.log("lane change failed - obstacle too close")
