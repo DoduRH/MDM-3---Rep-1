@@ -89,7 +89,7 @@ class Road:
 
     # returns the average velocity of vehicles in a lane
     def calcLaneFlowRate(self, lane):
-        vehiclesInLane = [x for x in self.vehicleArray if x.lane == lane]
+        vehiclesInLane = self.carsInLane(lane)
         totalVelocity = 0
         for vehicleObject in vehiclesInLane:
             totalVelocity += vehicleObject.velocity
