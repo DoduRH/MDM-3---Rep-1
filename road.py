@@ -79,7 +79,7 @@ class Road:
                     # check for pre-existing cars within same lane to stop cars spawning on-top of each other
                     vehicleFound = False
                     for vehicleObject in self.carsInLane(i):
-                        if vehicleObject.x < 100:
+                        if vehicleObject.x < vehicleObject.stoppingDistance:
                             vehicleFound = True
 
                     if vehicleFound:

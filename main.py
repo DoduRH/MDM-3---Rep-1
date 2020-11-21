@@ -64,7 +64,7 @@ roadObject = road.Road(pos=[0, (gV.displaySize[1] / 2) - gV.roadWidth / 2], lane
 
 # Add obstacle
 roadObject.obstructionArray.append(obstacle.Obstacle(road=roadObject, x=(gV.displaySize[0] / gV.scale) / 1.6, lane=0))
-# roadObject.obstructionArray.append(obstacle.Obstacle(road=roadObject, x=(gV.displaySize[0] / gV.scale) / 1.5, lane=1))
+roadObject.obstructionArray.append(obstacle.Obstacle(road=roadObject, x=(gV.displaySize[0] / gV.scale) / 1.5, lane=1))
 # print("Obstacle position is", roadObject.obstructionArray[0].x)
 # Record the starting time of simulation
 runningTime = 0
