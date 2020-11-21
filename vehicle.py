@@ -59,7 +59,7 @@ class Vehicle:
 
     # move vehicle up to max speed then stop
     def move(self):
-        self.stoppingDistance = ((1250 / 4101 + (125 / 8202 * self.velocity * 2.23694)) * (self.velocity * 2.23694)) + 3
+        self.stoppingDistance = self.calcBreakingDistance(self.velocity)
         if (self.velocity + self.acceleration) <= self.speedLimit:
             self.velocity += self.acceleration * gV.deltaTime
             if self.velocity < 0:
@@ -212,7 +212,7 @@ class Vehicle:
             # don't pull in if you cannot stop in time or you are overtaking car in-front
             if (selfFrontBumper < otherBackBumper < selfFrontBumper +
                     (self.calcBreakingDistance(self.velocity - vehicleObject.velocity) * self.politeness) or
-                    (vehicleObject.velocity <= self.velocity and selfFrontBumper < otherBackBumper)):
+                    (vehicleObject.velocity < self.velocity and selfFrontBumper < otherBackBumper)):
                 # self.log("vehicle", vehicleObject.number, "blocking self breaking distance")
                 return False
 
