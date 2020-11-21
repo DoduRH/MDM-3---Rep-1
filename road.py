@@ -35,8 +35,17 @@ class Road:
             vehicleType = np.random.choice(list(gV.vehicleSizes.keys()))
         vehicleSize = gV.vehicleSizes[vehicleType]
 
+        # ensure an LGV is not being spawned in the most outer lane
+        if lane is self.laneCount - 1:
+            if vehicleType == 'LGV':
+                # print("LGVs cannot spawn in the 3rd lane")
+                lane = np.random.randint(0, self.laneCount - 1)
+
         if lane is None:
-            lane = np.random.randint(0, self.laneCount)
+            if vehicleType == 'LGV' and self.laneCount >= 3:
+                lane = np.random.randint(0, self.laneCount - 1)
+            else:
+                lane = np.random.randint(0, self.laneCount)
 
         if x is None:
             x = -vehicleSize

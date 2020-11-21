@@ -164,6 +164,11 @@ class Vehicle:
             # self.log("Lane change failed - lack of lanes")
             return False
 
+        # check that an LGV is not trying to change into most outer lane
+        if self.size[0] == gV.vehicleSizes['LGV'] and targetLane < 0 or targetLane >= self.road.laneCount - 1:
+            # self.log("Lane change failed - lack of lanes for LGV")
+            return False
+
         # check if already in the process of changing lane
         if 0 < self.changingProgress < self.changingTime:
             # self.log("Lane change failed - currently changing lanes")
