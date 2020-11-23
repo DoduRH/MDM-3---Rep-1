@@ -219,5 +219,5 @@ def stop():
 
 
 if __name__ == "__main__":
-    runSim(display=False, maxSimTime=120, seed=26697)
+    runSim(display=True, maxSimTime=120, seed=26697)
     stop()

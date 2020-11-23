@@ -1,8 +1,8 @@
 # A lovely home for all our global variables
 
 # pygame variables
-displaySize = (2000, 600)
-fps = 60
+displaySize = (3000, 600)
+fps = 10
 
 # colour bank
 red = (255, 0, 0)
