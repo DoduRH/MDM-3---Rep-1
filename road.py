@@ -13,8 +13,9 @@ class Road:
         self.laneCount = laneCount
         self.laneWidth = laneWidth
         self.laneFlowRates = np.zeros(laneCount)
-        self.meanArrivalRate = meanArrivalRate
-        assert len(meanArrivalRate) == laneCount, "meanArrivalRate must have " + laneCount + " elements"
+        self.meanArrivalRate = [meanArrivalRate for _ in range(laneCount)]
+        # assert len(meanArrivalRate) == laneCount, "meanArrivalRate must have " + laneCount + " elements"
+
 
         self.vehicleArray = []
         self.obstructionArray = []
@@ -22,9 +23,21 @@ class Road:
         self.font = pg.font.SysFont('Comic Sans MS', round(laneWidth - laneWidth * 0.25))
 
     def draw(self, display):
+        '''
+            Draw road object and cars/obstacles on it
+        '''
+        # Draw road
         for i in range(self.laneCount):
             pg.draw.rect(display, gV.grey,
                          [self.pos[0], self.pos[1] + self.laneWidth * i * 1.05, gV.displaySize[0], self.laneWidth])
+        
+        # Draw cars
+        for vehicleObject in self.vehicleArray:
+            vehicleObject.draw(display)
+
+        # obstacle handling loop
+        for obstacleObject in self.obstructionArray:
+            obstacleObject.draw(display)
 
     def spawnVehicle(self, vehicleType=None, lane=None, x=None, speedLimit=None, acceleration=None, deceleration=None,
                      checkSpawn=True):
