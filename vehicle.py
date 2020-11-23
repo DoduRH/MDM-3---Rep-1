@@ -20,8 +20,8 @@ class Vehicle:
         self.colour = [(self.speedLimit - self.velocity) / self.speedLimit * 200, self.velocity / self.speedLimit * 200,
                        0]
         self.crashed = False
-        self.stoppingDistance = ((1250/4101 + (125/8202 * self.velocity * 2.23694)) * (self.velocity * 2.23694)) + 3
-        self.visionDistance = ((1250/4101 + (125/8202 * self.speedLimit * 2.23694)) * (self.speedLimit * 2.23694)) + 3
+        self.stoppingDistance = self.calcBreakingDistance(self.velocity)
+        self.visionDistance = self.calcBreakingDistance(speedLimit)
         self.changingLane = False
         self.oldLane = -1
         self.acceleration = 0
@@ -29,6 +29,7 @@ class Vehicle:
         self.changingTime = 50
         self.number = road.newCarIndex()
         self.timeAlive = 0
+        self.politeness = np.random.uniform(0.5, 1.5)
 
     # draws everything to do with vehicle
     def draw(self, display):
@@ -58,7 +59,7 @@ class Vehicle:
 
     # move vehicle up to max speed then stop
     def move(self):
-        self.stoppingDistance = ((1250/4101 + (125/8202 * self.velocity * 2.23694)) * (self.velocity * 2.23694)) + 3
+        self.stoppingDistance = self.calcBreakingDistance(self.velocity)
         if (self.velocity + self.acceleration) <= self.speedLimit:
             self.velocity += self.acceleration * gV.deltaTime
             if self.velocity < 0:
@@ -110,34 +111,35 @@ class Vehicle:
             if hazardDistance <= self.stoppingDistance:
                 if isinstance(closestHazard, Vehicle):
                     # if the vehicle in front is traveling faster then accelerate to match speed
-                    if self.velocity < closestHazard.velocity and self.x + self.size[0] + 14 < closestHazard.x:
+                    if self.velocity < (closestHazard.velocity + (closestHazard.velocity * 0.1)) and self.x + self.size[
+                        0] + 14 < closestHazard.x:
                         self.acceleration = self.maxAcceleration
 
                     # if travelling faster than vehicle in front then try and overtake
-                    elif self.velocity >= closestHazard.velocity and self.x + self.size[0] + 14 > closestHazard.x:
-                        changed = self.safeLaneChange(1)
+                    elif self.velocity >= closestHazard.velocity:
+                        changed = self.safeLaneChange(1, closestHazard)
                         if not changed:
                             # Break maximally for the closest 30% of the stopping distance
-                            self.acceleration = self.maxDeceleration / (hazardDistance / (self.stoppingDistance * 0.3))
+                            self.acceleration = self.maxDeceleration / (hazardDistance / (self.stoppingDistance * 0.5))
                             if self.acceleration <= self.maxDeceleration:
                                 self.acceleration = self.maxDeceleration
 
                     # if you need to break due to a vehicle start breaking and look to overtake using outside lane
                     else:
                         # Break maximally for the closest 30% of the stopping distance
-                        self.acceleration = self.maxDeceleration / (hazardDistance / (self.stoppingDistance * 0.3))
+                        self.acceleration = self.maxDeceleration / (hazardDistance / (self.stoppingDistance * 0.5))
                         if self.acceleration <= self.maxDeceleration:
                             self.acceleration = self.maxDeceleration
 
                 else:
                     # Break maximally for the closest 30% of the stopping distance
-                    self.acceleration = self.maxDeceleration / (hazardDistance / (self.stoppingDistance * 0.3))
+                    self.acceleration = self.maxDeceleration / (hazardDistance / (self.stoppingDistance * 0.5))
                     if self.acceleration <= self.maxDeceleration:
                         self.acceleration = self.maxDeceleration
 
-                    changed = self.safeLaneChange(1)
+                    changed = self.safeLaneChange(1, closestHazard)
                     if not changed:
-                        self.safeLaneChange(-1)
+                        self.safeLaneChange(-1, closestHazard)
 
             # if hazard is outside of stopping distance it is not a true hazard so accelerate
             else:
@@ -157,11 +159,18 @@ class Vehicle:
         self.crashed = True
 
     # Check for obstructions, then change lane.  Return True or false depending if the change was successful
-    def safeLaneChange(self, direction):
+    def safeLaneChange(self, direction, closestHazard=None):
+        import obstacle
         # Check is a valid lane
         targetLane = self.lane + direction
         if targetLane < 0 or targetLane >= self.road.laneCount:
             # self.log("Lane change failed - lack of lanes")
+            return False
+
+        # check that an LGV is not trying to change into most outer lane
+        if (self.size[0] == gV.vehicleSizes['LGV'] and (targetLane < 0 or targetLane >= self.road.laneCount - 1) and
+                not isinstance(closestHazard, obstacle.Obstacle) and (closestHazard.velocity >= 5)):
+            # self.log("Lane change failed - lack of lanes for LGV")
             return False
 
         # check if already in the process of changing lane
@@ -199,19 +208,25 @@ class Vehicle:
                 # self.log("vehicle", vehicleObject.number, "blocking other back bumper")
                 return False
 
-            # self stopping distance - other back bumper between self front bumper and self sopped distance
-            if selfFrontBumper < otherBackBumper < selfFrontBumper + self.stoppingDistance and vehicleObject.velocity <= self.velocity:
+            # pulling in behind somebody
+            # don't pull in if you cannot stop in time or you are overtaking car in-front
+            if (selfFrontBumper < otherBackBumper < selfFrontBumper +
+                    (self.calcBreakingDistance(self.velocity - vehicleObject.velocity) * self.politeness) or
+                    (vehicleObject.velocity < self.velocity and selfFrontBumper < otherBackBumper)):
                 # self.log("vehicle", vehicleObject.number, "blocking self breaking distance")
                 return False
 
-            # self stopping distance
-            if otherFrontBumper < selfBackBumper < otherFrontBumper + vehicleObject.stoppingDistance and vehicleObject.velocity >= self.velocity:
+            # pulling out on somebody
+            # pull out if there is sufficient stopping distance
+            if (otherFrontBumper < selfBackBumper < otherFrontBumper +
+                    (self.calcBreakingDistance(vehicleObject.velocity - self.velocity) * self.politeness)):
                 # self.log("vehicle", vehicleObject.number, "blocking other breaking distance")
                 return False
 
         newLaneObstacles = self.road.obstaclesInLane(targetLane)
         for obstacle in newLaneObstacles:
-            if ((math.isclose(obstacle.x, self.x + self.size[0], abs_tol=self.stoppingDistance) and self.x < obstacle.x) or
+            if ((math.isclose(obstacle.x, self.x + self.size[0],
+                              abs_tol=self.stoppingDistance) and self.x < obstacle.x) or
                     obstacle.x < self.x < obstacle.x + obstacle.size[0] or
                     self.x < obstacle.x < self.x + self.size[0]):
                 # self.log("lane change failed - obstacle too close")
@@ -240,6 +255,14 @@ class Vehicle:
                     changed = self.safeLaneChange(-1)
 
         return changed
+
+    # calculates breaking distance given a velocity in m/s
+    def calcBreakingDistance(self, velocity):
+        if velocity < 0:
+            return 14
+        else:
+            breakingDistance = ((1250 / 4101 + (125 / 8202 * velocity * 2.23694)) * (velocity * 2.23694)) + 14
+            return breakingDistance
 
     # Log message including car colour (could swap for id or equivalent)
     def log(self, *message):
