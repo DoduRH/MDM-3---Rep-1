@@ -148,7 +148,7 @@ class Vehicle:
         # else their are no hazards ahead so change to non-overtaking lane
         else:
             self.acceleration = self.maxAcceleration
-            self.safeLaneChange(-1, [])
+            self.safeLaneChange(-1)
             # if self.checkLaneFlowRates(road):
             #    pass
             # else:
@@ -159,7 +159,7 @@ class Vehicle:
         self.crashed = True
 
     # Check for obstructions, then change lane.  Return True or false depending if the change was successful
-    def safeLaneChange(self, direction, closestHazard):
+    def safeLaneChange(self, direction, closestHazard=None):
         import obstacle
         # Check is a valid lane
         targetLane = self.lane + direction
