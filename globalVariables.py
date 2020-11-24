@@ -42,3 +42,6 @@ scale = 1 # How many pixels per meter, only affects length left to right
 
 # Seeding numpy to give reproducible results, set to None to generate a seed
 seed = None 
+
+# Position of the flow rate markers (meters)
+flowrateChecks = [1500, 2000, 2500]

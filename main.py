@@ -109,6 +109,7 @@ def processData(crossingTimes, roadObject):
         "averageVelocityTotal": gV.avgVelocityTotal,
         "averageVelocityLanes": gV.avgVelocityLanes,
         "vehiclesPerSecond": vps,
+        "vehicleFlowRate": gV.carCount
     }
 
     for key in data:
@@ -162,8 +163,10 @@ def resetSim():
 
 
 def runSim(display=True, maxSimTime=None, seed=None):
+    gV.carCount = []
     gV.avgVelocityTotal = []
     gV.avgVelocityLanes = []
+    gV.tempCarCount = [0 for _ in range(gV.laneCount)]
     if seed is not None:
         gV.seed = seed
         np.random.seed(gV.seed)
@@ -195,6 +198,10 @@ def runSim(display=True, maxSimTime=None, seed=None):
         if round(gV.runTimer, 1) % 1 == 0:
             roadObject.generateTraffic()
 
+        if gV.runTimer % 60 < 0.1: # every 60 seconds
+            gV.carCount.append(gV.tempCarCount)
+            gV.tempCarCount = [0 for x in range(gV.laneCount)]
+
         # vehicle handling loop
         for vehicleObject in roadObject.vehicleArray:
             vehicleObject.checkHazards(roadObject, roadObject.vehicleArray, roadObject.obstructionArray)
@@ -219,5 +226,5 @@ def stop():
 
 
 if __name__ == "__main__":
-    runSim(display=True, maxSimTime=120, seed=26697)
+    output = runSim(display=False, maxSimTime=120, seed=26697)
     stop()

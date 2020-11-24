@@ -67,8 +67,13 @@ class Vehicle:
             self.colour = [(self.speedLimit - self.velocity) / self.speedLimit * 200,
                            self.velocity / self.speedLimit * 200, 0]
 
+        oldPos = self.x
         self.x += self.velocity * gV.deltaTime
         self.timeAlive += gV.deltaTime
+
+        for flowSensor in gV.flowrateChecks:
+            if oldPos < flowSensor < self.x:
+                gV.tempCarCount[self.lane] += 1
 
         if self.x > gV.displaySize[0] / gV.scale:
             self.road.vehicleArray.remove(self)
