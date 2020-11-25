@@ -17,9 +17,9 @@ grey = (211, 211, 211)
 # simulation variables
 roadWidth = 20
 # Mean cars arriving every 1 seconds (page 8 https://rosap.ntl.bts.gov/view/dot/16299/dot_16299_DS1.html)
-# arrivalRate = [0.001, 0.06166666666666667, 0.06166666666666667]
-arrivalRate = [0.5, 0.5, 0.5]
-#arrivalRate = [0, 0, 0]
+arrivalRate = [0.06166666666666667, 0.06166666666666667, 0.06166666666666667]
+# arrivalRate = [0.5, 0.5, 0.5]
+# arrivalRate = [0, 0, 0]
 
 laneCount = 3
 
