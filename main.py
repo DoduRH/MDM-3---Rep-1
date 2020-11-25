@@ -25,7 +25,6 @@ if gV.seed is None:
 
 np.random.seed(gV.seed)
 
-
 gV.avgVelocityTotal = []
 gV.avgVelocityLanes = []
 
@@ -50,12 +49,12 @@ def averageVelocity(roadObject):
         if count == 0:
             laneVelocity.append("NaN")
         else:
-            laneVelocity.append(vel/count)
+            laneVelocity.append(vel / count)
 
     if totalCount == 0:
         avgVelocity = "NaN"
     else:
-        avgVelocity = totalVelocity/totalCount
+        avgVelocity = totalVelocity / totalCount
 
     return avgVelocity, laneVelocity
 
@@ -79,7 +78,7 @@ def processData(crossingTimes, roadObject):
         avgVelocity = 0
 
     if avgTime != 0:
-        vps = 1/avgTime
+        vps = 1 / avgTime
     else:
         vps = "NaN"
 
@@ -132,7 +131,7 @@ def visualiseSimulation(roadObject):
     # Draw time to the display
     timer_surface = timer_font.render(str(round(gV.runTimer, 3)), False, gV.black)
     simDisplay.blit(timer_surface, (5, 0))
-    
+
     pg.display.update()
 
     simQuit = False
@@ -154,7 +153,7 @@ def visualiseSimulation(roadObject):
             # Add cars in specific lanes on number pressed
             if event.unicode.isnumeric() and int(event.unicode) < gV.laneCount:
                 roadObject.spawnVehicle(lane=int(event.unicode))
-    
+
     return simQuit
 
 
@@ -180,10 +179,10 @@ def runSim(display=True, maxSimTime=None, seed=None):
 
     # Create Objects for simulation
     roadObject = road.Road(pos=[0, (gV.displaySize[1] / 2) - gV.roadWidth / 2], laneCount=gV.laneCount,
-                        laneWidth=gV.roadWidth, meanArrivalRate=gV.arrivalRate)
+                           laneWidth=gV.roadWidth, meanArrivalRate=gV.arrivalRate)
 
     # Add obstacle
-    roadObject.obstructionArray.append(obstacle.Obstacle(road=roadObject, x=2000, lane=0))
+    # roadObject.obstructionArray.append(obstacle.Obstacle(road=roadObject, x=2000, lane=0))
     # roadObject.obstructionArray.append(obstacle.Obstacle(road=roadObject, x=(gV.displaySize[0] / gV.scale) / 1.5, lane=1))
     # print("Obstacle position is", roadObject.obstructionArray[0].x)
     # Record the starting time of simulation
@@ -208,12 +207,12 @@ def runSim(display=True, maxSimTime=None, seed=None):
         # Recalculates the average velocity of all vehicles in each lane
         for laneNum in range(roadObject.laneCount):
             roadObject.calcLaneFlowRate(laneNum)
-        
+
         velocities = averageVelocity(roadObject)
-        
+
         gV.avgVelocityTotal.append(velocities[0])
         gV.avgVelocityLanes.append(velocities[1])
-    
+
     return processData(gV.vehicleCrossingTimes, roadObject)
 
 
