@@ -110,6 +110,7 @@ def processData(crossingTimes, roadObject):
         "averageVelocityTotal": gV.avgVelocityTotal,
         "averageVelocityLanes": gV.avgVelocityLanes,
         "vehiclesPerSecond": vps,
+        "vehicleFlowRate": gV.carCount
     }
 
     for key in data:
@@ -162,9 +163,13 @@ def resetSim():
     np.random.seed(gV.seed)
 
 
-def runSim(display=True, maxSimTime=None, seed=None):
+def runSim(obstacle={}, display=True, maxSimTime=None, seed=None):
+    gV.carCount = []
     gV.avgVelocityTotal = []
     gV.avgVelocityLanes = []
+    gV.tempCarCount = {}
+    for x in gV.flowrateChecks:
+        gV.tempCarCount[x] = [0 for _ in range(gV.laneCount)]
     if seed is not None:
         gV.seed = seed
         np.random.seed(gV.seed)
@@ -182,7 +187,7 @@ def runSim(display=True, maxSimTime=None, seed=None):
                            laneWidth=gV.roadWidth, meanArrivalRate=gV.arrivalRate)
 
     # Add obstacle
-    # roadObject.obstructionArray.append(obstacle.Obstacle(road=roadObject, x=2000, lane=0))
+    # roadObject.obstructionArray.append(obstacle.Obstacle(road=roadObject, x=o['distance'], lane=0['lane']))
     # roadObject.obstructionArray.append(obstacle.Obstacle(road=roadObject, x=(gV.displaySize[0] / gV.scale) / 1.5, lane=1))
     # print("Obstacle position is", roadObject.obstructionArray[0].x)
     # Record the starting time of simulation
@@ -195,6 +200,12 @@ def runSim(display=True, maxSimTime=None, seed=None):
         # generate traffic coming down road frequency dependent on poisson distribution
         if round(gV.runTimer, 1) % 1 == 0:
             roadObject.generateTraffic()
+
+        if gV.runTimer % 60 < 0.1: # every 60 seconds
+            gV.carCount.append(gV.tempCarCount)
+            gV.tempCarCount = {}
+            for x in gV.flowrateChecks:
+                gV.tempCarCount[x] = [0 for _ in range(gV.laneCount)]
 
         # vehicle handling loop
         for vehicleObject in roadObject.vehicleArray:
@@ -221,5 +232,5 @@ def stop():
 
 
 if __name__ == "__main__":
-    runSim(display=True, maxSimTime=120, seed=26697)
+    output = runSim(display=True, maxSimTime=60*10, seed=26697)
     stop()
