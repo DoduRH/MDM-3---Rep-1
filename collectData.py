@@ -45,7 +45,6 @@ for variable, values in simulations.items():
         gV.__dict__[variable] = val
         data[str(val)] = sim.runSim(display=False, maxSimTime=60*60, seed=randint(0, 100000))
 
-
     with open("data/" + variable + ".json", "w") as outfile:
         json.dump(data, outfile, sort_keys=True, indent=4)
 

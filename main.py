@@ -29,6 +29,7 @@ np.random.seed(gV.seed)
 gV.avgVelocityTotal = []
 gV.avgVelocityLanes = []
 
+
 def averageVelocity(roadObject):
     '''
         Returns tupple containing total average velocity and average velocity of each lane
@@ -57,6 +58,7 @@ def averageVelocity(roadObject):
         avgVelocity = totalVelocity/totalCount
 
     return avgVelocity, laneVelocity
+
 
 # define functions here
 def processData(crossingTimes, roadObject):
@@ -213,6 +215,7 @@ def runSim(display=True, maxSimTime=None, seed=None):
         gV.avgVelocityLanes.append(velocities[1])
     
     return processData(gV.vehicleCrossingTimes, roadObject)
+
 
 def stop():
     pg.quit()
