@@ -241,7 +241,7 @@ class Vehicle:
         self.lane += direction
         self.changingLane = True
         self.changingProgress = 0
-        self.changingTime = 50
+        self.changingTime = 2 / gV.deltaTime
 
     # check the flow rates of all lanes. If one is higher than current lane change to lane with higher flow rate
     def checkLaneFlowRates(self, road):
