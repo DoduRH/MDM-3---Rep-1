@@ -44,4 +44,4 @@ scale = 1 # How many pixels per meter, only affects length left to right
 seed = None 
 
 # Position of the flow rate markers (meters)
-flowrateChecks = [1500, 2000, 2500]
+flowrateChecks = [500, 1000, 1500, 2000, 2500]

@@ -73,7 +73,8 @@ class Vehicle:
 
         for flowSensor in gV.flowrateChecks:
             if oldPos < flowSensor < self.x:
-                gV.tempCarCount[self.lane] += 1
+                # gV.tempCarCount[self.lane] += 1
+                gV.tempCarCount[flowSensor][self.lane] += 1
 
         if self.x > gV.displaySize[0] / gV.scale:
             self.road.vehicleArray.remove(self)
