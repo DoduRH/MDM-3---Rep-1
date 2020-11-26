@@ -14,8 +14,6 @@ class Road:
         self.laneWidth = laneWidth
         self.laneFlowRates = np.zeros(laneCount)
         self.meanArrivalRate = [meanArrivalRate for _ in range(laneCount)]
-        # assert len(meanArrivalRate) == laneCount, "meanArrivalRate must have " + laneCount + " elements"
-
 
         self.vehicleArray = []
         self.obstructionArray = []
@@ -85,26 +83,11 @@ class Road:
     def generateTraffic(self):
         for i in range(self.laneCount):
             for _ in range(0, np.random.poisson(self.meanArrivalRate[i])):
-                if len(self.vehicleArray) == 0:
-                    self.spawnVehicle(lane=i)
-
-                else:
-                    # check for pre-existing cars within same lane to stop cars spawning on-top of each other
-                    vehicleFound = False
-                    for vehicleObject in self.carsInLane(i):
-                        if vehicleObject.x < vehicleObject.stoppingDistance:
-                            vehicleFound = True
-
-                    if vehicleFound:
-                        pass
-                        # print("Error generating car car already in lane")
-
-                    else:
-                        self.spawnVehicle(lane=i)
+                self.spawnVehicle(lane=i)
 
     # Returns list of cars in specified lane
     def carsInLane(self, lane):
-        return [x for x in self.vehicleArray if x.lane == lane or x.oldLane == lane]
+        return [x for x in self.vehicleArray if x.lane == lane]
 
     def obstaclesInLane(self, lane):
         return [x for x in self.obstructionArray if x.lane == lane]
@@ -132,7 +115,8 @@ class Road:
     # returns true if there is a car and false if it is safe to spawn car
     def carSpawnCheck(self, lane):
         for vehicles in self.vehicleArray:
-            if vehicles.lane == lane and vehicles.x < 100:
+            if vehicles.lane == lane and vehicles.x < 80: # must spawn 2 chevrons apart
+                # print("Spawn failed")
                 return True
 
         return False

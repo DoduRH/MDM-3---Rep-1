@@ -132,16 +132,18 @@ class Vehicle:
 
                     # if you need to break due to a vehicle start breaking and look to overtake using outside lane
                     else:
+                        self.acceleration = self.maxDeceleration
                         # Break maximally for the closest 30% of the stopping distance
-                        self.acceleration = self.maxDeceleration / (hazardDistance / (self.stoppingDistance * 0.5))
-                        if self.acceleration <= self.maxDeceleration:
-                            self.acceleration = self.maxDeceleration
+                        #self.acceleration = self.maxDeceleration / (hazardDistance / (self.stoppingDistance * 0.5))
+                        #if self.acceleration <= self.maxDeceleration:
+                        #    self.acceleration = self.maxDeceleration
 
                 else:
+                    self.acceleration = self.maxDeceleration
                     # Break maximally for the closest 30% of the stopping distance
-                    self.acceleration = self.maxDeceleration / (hazardDistance / (self.stoppingDistance * 0.5))
-                    if self.acceleration <= self.maxDeceleration:
-                        self.acceleration = self.maxDeceleration
+                    #self.acceleration = self.maxDeceleration / (hazardDistance / (self.stoppingDistance * 0.5))
+                    #if self.acceleration <= self.maxDeceleration:
+                    #    self.acceleration = self.maxDeceleration
 
                     changed = self.safeLaneChange(1, closestHazard)
                     if not changed:
@@ -166,6 +168,7 @@ class Vehicle:
 
     # Check for obstructions, then change lane.  Return True or false depending if the change was successful
     def safeLaneChange(self, direction, closestHazard=None):
+        # self.log("safe lane change", direction)
         import obstacle
         # Check is a valid lane
         targetLane = self.lane + direction

@@ -4,10 +4,10 @@ import vehicle
 import obstacle
 import road
 import numpy as np
-import pandas as pd
 import matplotlib as plt
 import globalVariables as gV
 from random import randint
+from scipy import stats
 
 # initialise pygame
 pg.init()
@@ -84,7 +84,6 @@ def processData(crossingTimes, roadObject):
 
     print("\nStats\n--------------------------------------------------------------------------------------------------")
     print("Simulation was run for", gV.runTimer, "seconds")
-    print("Seed is", gV.seed)
     print("Average time taken for 1 vehicle to cross road:", avgTime, "s")
     print("Vehicles per second:", vps)
 
@@ -102,7 +101,8 @@ def processData(crossingTimes, roadObject):
             "acceleration": gV.acceleration,
             "deceleration": gV.deceleration,
             "maxSpeed": gV.maxSpeedDist,
-            "vehicleSizes": gV.vehicleSizes
+            "vehicleSizes": gV.vehicleSizes,
+            "obstacles": gV.obstacles
         },
         "runTimer": gV.runTimer,
         "avgerageTime": avgTime,
@@ -110,7 +110,8 @@ def processData(crossingTimes, roadObject):
         "averageVelocityTotal": gV.avgVelocityTotal,
         "averageVelocityLanes": gV.avgVelocityLanes,
         "vehiclesPerSecond": vps,
-        "vehicleFlowRate": gV.carCount
+        "vehicleFlowRate": gV.carCount,
+        "velocityDistribution": gV.velocityDistribution
     }
 
     for key in data:
@@ -120,7 +121,7 @@ def processData(crossingTimes, roadObject):
 
 
 def visualiseSimulation(roadObject):
-    clock.tick(gV.fps)
+    clock.tick(gV.fps*100)
     simDisplay.fill(gV.white)
     roadObject.draw(simDisplay)
 
@@ -163,16 +164,20 @@ def resetSim():
     np.random.seed(gV.seed)
 
 
-def runSim(obstacle={}, display=True, maxSimTime=None, seed=None):
+def runSim(display=True, maxSimTime=None, seed=None):
     gV.carCount = []
     gV.avgVelocityTotal = []
     gV.avgVelocityLanes = []
+    gV.velocityDistribution = []
     gV.tempCarCount = {}
     for x in gV.flowrateChecks:
         gV.tempCarCount[x] = [0 for _ in range(gV.laneCount)]
     if seed is not None:
         gV.seed = seed
         np.random.seed(gV.seed)
+
+    print("Seed is", gV.seed)
+
     gV.runTimer = 0
     gV.vehicleCrossingTimes = []
 
@@ -187,10 +192,9 @@ def runSim(obstacle={}, display=True, maxSimTime=None, seed=None):
                            laneWidth=gV.roadWidth, meanArrivalRate=gV.arrivalRate)
 
     # Add obstacle
-    # roadObject.obstructionArray.append(obstacle.Obstacle(road=roadObject, x=o['distance'], lane=0['lane']))
-    # roadObject.obstructionArray.append(obstacle.Obstacle(road=roadObject, x=(gV.displaySize[0] / gV.scale) / 1.5, lane=1))
-    # print("Obstacle position is", roadObject.obstructionArray[0].x)
-    # Record the starting time of simulation
+    for obstacleObj in gV.obstacles:
+        roadObject.obstructionArray.append(obstacle.Obstacle(road=roadObject, x=obstacleObj['x'], lane=obstacleObj['lane']))
+
     # Main loop
     while not simQuit and gV.runTimer < maxSimTime:
         gV.runTimer += gV.deltaTime
@@ -224,6 +228,13 @@ def runSim(obstacle={}, display=True, maxSimTime=None, seed=None):
         gV.avgVelocityTotal.append(velocities[0])
         gV.avgVelocityLanes.append(velocities[1])
 
+        velocities = [x.velocity for x in roadObject.vehicleArray]
+
+        if len(velocities) > 0:
+            gV.velocityDistribution.append(stats.norm.fit(velocities))
+        else:
+            gV.velocityDistribution.append((0, 0))
+
     return processData(gV.vehicleCrossingTimes, roadObject)
 
 
@@ -232,5 +243,5 @@ def stop():
 
 
 if __name__ == "__main__":
-    output = runSim(display=True, maxSimTime=60*10, seed=26697)
+    output = runSim(display=True, maxSimTime=60*60, seed=426)
     stop()
