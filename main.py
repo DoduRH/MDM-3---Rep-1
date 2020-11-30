@@ -121,7 +121,7 @@ def processData(crossingTimes, roadObject):
 
 
 def visualiseSimulation(roadObject):
-    clock.tick(gV.fps*100)
+    clock.tick(gV.fps*10)
     simDisplay.fill(gV.white)
     roadObject.draw(simDisplay)
 

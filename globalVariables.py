@@ -14,7 +14,7 @@ roadWidth = 20 # Width of each lane
 
 arrivalRate = 1.25 # Mean cars arriving per lane per second
 
-laneCount = 2
+laneCount = 3
 
 acceleration = 4 # Max acceleration
 deceleration = -10 # Max deceleration
