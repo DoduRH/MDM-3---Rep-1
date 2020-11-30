@@ -33,6 +33,12 @@ vehicleSizes = {
     "LGV": 18
 }
 
+vehicleWeighting = {
+    "car": 1/3,
+    "van": 1/3,
+    "LGV": 1/3
+}
+
 scale = 1 # How many pixels per meter, only affects length left to right
 
 obstacles = [

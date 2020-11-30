@@ -111,7 +111,8 @@ def processData(crossingTimes, roadObject):
         "averageVelocityLanes": gV.avgVelocityLanes,
         "vehiclesPerSecond": vps,
         "vehicleFlowRate": gV.carCount,
-        "velocityDistribution": gV.velocityDistribution
+        "velocityDistribution": gV.velocityDistribution,
+        "numVehicles": roadObject.spawnedVehicles
     }
 
     for key in data:
@@ -244,4 +245,5 @@ def stop():
 
 if __name__ == "__main__":
     output = runSim(display=True, maxSimTime=60*60, seed=426)
+    print(output)
     stop()

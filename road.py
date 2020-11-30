@@ -20,6 +20,12 @@ class Road:
         self.currentCarIndex = -1
         self.font = pg.font.SysFont('Comic Sans MS', round(laneWidth - laneWidth * 0.25))
 
+        self.spawnedVehicles = {
+            "car": 0,
+            "van": 0,
+            "LGV": 0
+        }
+
     def draw(self, display):
         '''
             Draw road object and cars/obstacles on it
@@ -43,7 +49,13 @@ class Road:
             Spawns a vehicle, uses global variables if parameters are None
         '''
         if vehicleType is None:
-            vehicleType = np.random.choice(list(gV.vehicleSizes.keys()))
+            vehicleOptions = list(gV.vehicleSizes.keys())
+            weights = []
+            for v in vehicleOptions:
+                weights.append(gV.vehicleWeighting[v])
+
+            vehicleType = np.random.choice(vehicleOptions, p=weights)
+            self.spawnedVehicles[vehicleType] += 1
         vehicleSize = gV.vehicleSizes[vehicleType]
 
         # ensure an LGV is not being spawned in the most outer lane

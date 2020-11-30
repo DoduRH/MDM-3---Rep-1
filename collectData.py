@@ -42,6 +42,48 @@ simulations = {
                 "LGV": (40/2.237, 5/2.237)  # mean of 40 mph, std of 5 mph
             }
         }
+    ],
+    "vehicleWeighting": [
+        {
+            "name": "100-0",
+            "data": {
+                "car": 1.00, 
+                "van": 0,
+                "LGV": 0  
+            }
+        },
+        {
+            "name": "75-25",
+            "data": {
+                "car": 0.75,
+                "van": 0,
+                "LGV": 0.25 
+            }
+        },
+        {
+            "name": "50-50",
+            "data": {
+                "car": 0.50,
+                "van": 0,
+                "LGV": 0.50 
+            }
+        },
+        {
+            "name": "25-75",
+            "data": {
+                "car": 0.25,
+                "van": 0,
+                "LGV": 0.75 
+            }
+        },
+        {
+            "name": "0-100",
+            "data": {
+                "car": 0,
+                "van": 0,
+                "LGV": 1
+            }
+        },
     ]
 }
 
