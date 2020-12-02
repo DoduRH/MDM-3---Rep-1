@@ -244,6 +244,6 @@ def stop():
 
 
 if __name__ == "__main__":
-    output = runSim(display=True, maxSimTime=60*60, seed=426)
+    output = runSim(display=True, maxSimTime=60*60)
     print(output)
     stop()
