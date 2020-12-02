@@ -23,20 +23,20 @@ deceleration = -10 # Max deceleration
 maxSpeedDist = {
     "car": (70/2.237, 5/2.237), # mean of 70 mph, std of 5 mph
     "van": (70/2.237, 5/2.237),
-    "LGV": (60/2.237, 5/2.237)  # mean of 60 mph, std of 5 mph
+    "HGV": (60/2.237, 5/2.237)  # mean of 60 mph, std of 5 mph
 }
 
 # Length of vehicles in meters
 vehicleSizes = {
     "car": 4.5,
     "van": 8,
-    "LGV": 18
+    "HGV": 18
 }
 
 vehicleWeighting = {
     "car": 1/3,
     "van": 1/3,
-    "LGV": 1/3
+    "HGV": 1/3
 }
 
 scale = 1 # How many pixels per meter, only affects length left to right

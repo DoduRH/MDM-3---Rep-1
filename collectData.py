@@ -15,7 +15,7 @@ simulations = {
             "data": {
                 "car": (70/2.237, 5/2.237), # mean of 70 mph, std of 5 mph
                 "van": (70/2.237, 5/2.237),
-                "LGV": (60/2.237, 5/2.237)  # mean of 60 mph, std of 5 mph
+                "HGV": (60/2.237, 5/2.237)  # mean of 60 mph, std of 5 mph
             }
         },
         {
@@ -23,7 +23,7 @@ simulations = {
             "data": {
                 "car": (60/2.237, 5/2.237), # mean of 60 mph, std of 5 mph
                 "van": (60/2.237, 5/2.237),
-                "LGV": (60/2.237, 5/2.237)  # mean of 60 mph, std of 5 mph
+                "HGV": (60/2.237, 5/2.237)  # mean of 60 mph, std of 5 mph
             }
         },
         {
@@ -31,7 +31,7 @@ simulations = {
             "data": {
                 "car": (50/2.237, 5/2.237), # mean of 50 mph, std of 5 mph
                 "van": (50/2.237, 5/2.237),
-                "LGV": (50/2.237, 5/2.237)  # mean of 50 mph, std of 5 mph
+                "HGV": (50/2.237, 5/2.237)  # mean of 50 mph, std of 5 mph
             }
         },
         {
@@ -39,7 +39,7 @@ simulations = {
             "data": {
                 "car": (40/2.237, 5/2.237), # mean of 40 mph, std of 5 mph
                 "van": (40/2.237, 5/2.237),
-                "LGV": (40/2.237, 5/2.237)  # mean of 40 mph, std of 5 mph
+                "HGV": (40/2.237, 5/2.237)  # mean of 40 mph, std of 5 mph
             }
         }
     ],
@@ -49,7 +49,7 @@ simulations = {
             "data": {
                 "car": 1.00, 
                 "van": 0,
-                "LGV": 0  
+                "HGV": 0  
             }
         },
         {
@@ -57,7 +57,7 @@ simulations = {
             "data": {
                 "car": 0.75,
                 "van": 0,
-                "LGV": 0.25 
+                "HGV": 0.25 
             }
         },
         {
@@ -65,7 +65,7 @@ simulations = {
             "data": {
                 "car": 0.50,
                 "van": 0,
-                "LGV": 0.50 
+                "HGV": 0.50 
             }
         },
         {
@@ -73,7 +73,7 @@ simulations = {
             "data": {
                 "car": 0.25,
                 "van": 0,
-                "LGV": 0.75 
+                "HGV": 0.75 
             }
         },
         {
@@ -81,7 +81,7 @@ simulations = {
             "data": {
                 "car": 0,
                 "van": 0,
-                "LGV": 1
+                "HGV": 1
             }
         },
     ]

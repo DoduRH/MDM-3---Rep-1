@@ -23,7 +23,7 @@ class Road:
         self.spawnedVehicles = {
             "car": 0,
             "van": 0,
-            "LGV": 0
+            "HGV": 0
         }
 
     def draw(self, display):
@@ -58,14 +58,14 @@ class Road:
             self.spawnedVehicles[vehicleType] += 1
         vehicleSize = gV.vehicleSizes[vehicleType]
 
-        # ensure an LGV is not being spawned in the most outer lane
+        # ensure an HGV is not being spawned in the most outer lane
         if lane is self.laneCount - 1:
-            if vehicleType == 'LGV':
-                # print("LGVs cannot spawn in the 3rd lane")
+            if vehicleType == 'HGV':
+                # print("HGVs cannot spawn in the 3rd lane")
                 lane = np.random.randint(0, self.laneCount - 1)
 
         if lane is None:
-            if vehicleType == 'LGV' and self.laneCount >= 3:
+            if vehicleType == 'HGV' and self.laneCount >= 3:
                 lane = np.random.randint(0, self.laneCount - 1)
             else:
                 lane = np.random.randint(0, self.laneCount)
